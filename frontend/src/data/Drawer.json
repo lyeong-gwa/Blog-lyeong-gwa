@@ -1,0 +1,5 @@
+[
+    { "title": "Content", "icon": "mdi-run" },
+    { "title": "Development", "icon": "mdi-desktop-mac" },
+    { "title": "About", "icon": "mdi-help-box" }
+]
