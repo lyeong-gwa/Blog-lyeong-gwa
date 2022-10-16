@@ -1,7 +1,11 @@
 
 <template>
   <v-navigation-drawer v-model="this.drawer">
-    <v-list-item link to="Home">
+    <v-list-item 
+      link to="Home" 
+      color="rgba(0, 0, 0, 0)"
+      v-on:click="this.changePathName('Home')"
+      >
       <v-img contain src="@/assets/logo.png"></v-img>
     </v-list-item>
     <v-divider></v-divider>
@@ -10,8 +14,8 @@
       <v-list-item
         v-for="item in items"
         :key="item.title"
-        link
-        :to="item.title"
+        link :to="item.link"
+        v-on:click="this.changePathName(item.title)"
       >
         <v-list-item-title>
           <v-icon>{{ item.icon }}</v-icon>
@@ -30,7 +34,7 @@ export default {
   name: "DrawerComponent",
   data: function () {
     return {
-      items: require("@/data/Drawer.json"),
+      items: require("@/data/core/Drawer.json"),
     };
   },
   computed: {
@@ -39,7 +43,10 @@ export default {
     }),
   },
   methods: {
-    ...coreHelper.mapMutations(["changeDrawer"]),
+    ...coreHelper.mapMutations([
+      "changeDrawer",
+      "changePathName"
+  ]),
   },
 };
 </script>

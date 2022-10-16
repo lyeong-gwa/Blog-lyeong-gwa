@@ -1,26 +1,24 @@
 const state = {
-  drawer: true
+  drawer: true,
+  pathName: "Home"
 }
 
 // mutations
 const mutations = {
    changeDrawer(state){
     state.drawer = !state.drawer
+   },
+   changePathName(state,newPath){
+    state.pathName = newPath
    }
 }
 
-// actions
-const actions = {
-  callMutation ({ commit }) {
-    commit('changeDrawer')
-  }
-}
+
 
 
 
 export default {
 namespaced: true,
 state,
-mutations,
-actions,
+mutations
 }

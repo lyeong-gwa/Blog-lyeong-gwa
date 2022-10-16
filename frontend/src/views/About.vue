@@ -1,6 +1,6 @@
 <template>
   <div>
-    About
+    개발 보류
   </div>
 </template>
 
