@@ -34,7 +34,7 @@
           placeholder="Select your files"
           prepend-icon="mdi-paperclip"
           outlined
-          @change="previewFiles"
+          @change="changepreviewimage"
           :show-size="1000"
         >
           <template v-slot:selection="{ fileNames }">
@@ -63,12 +63,12 @@
 
     <v-carousel id="preview">
       <v-carousel-item
-      v-for="(item,i) in previewimage"
-      :key="i"
-      :src="item"
-      reverse-transition="fade-transition"
-      transition="fade-transition"
-    ></v-carousel-item>
+        v-for="(item, i) in previewimage"
+        :key="i"
+        :src="item"
+        reverse-transition="fade-transition"
+        transition="fade-transition"
+      ></v-carousel-item>
     </v-carousel>
   </v-container>
 </template>
@@ -82,39 +82,15 @@ export default {
     main_select: { label: "모험가", value: "adventurer" },
     sub_select: { label: "히어로", value: "Hero" },
     files: [],
-    previewimage:['https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg','https://cdn.vuetifyjs.com/images/carousel/sky.jpg'],
+    previewimage: [require('@/assets/image/coregemstone.png')],
   }),
   methods: {
-    previewFiles() {
-      var files = document.querySelector("input[type=file]").files;
-      var tmp_preview=[];
-      function readAndPreview(file) {
-        // `file.name` 형태의 확장자 규칙에 주의하세요
-        if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
-          var reader = new FileReader();
-
-          reader.addEventListener(
-            "load",
-            function () {
-              var image = new Image();
-              image.height = 100;
-              image.title = file.name;
-              image.src = this.result;
-              tmp_preview.push(image.src);
-            },
-            false
-          );
-
-          reader.readAsDataURL(file);
-        }
+    changepreviewimage() {
+      this.previewimage=[];
+      let tmp = document.querySelector("input[type=file]").files;
+      for (let i = 0; i < tmp.length; i++) {
+        this.previewimage.push(URL.createObjectURL(tmp[i]));
       }
-      
-      if (files) {
-        [].forEach.call(files, readAndPreview);
-      }
-      this.previewimage=tmp_preview;
-      console.log(tmp_preview[0]);
-      console.log(this.previewimage[0])
     },
   },
 };
