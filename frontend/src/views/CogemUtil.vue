@@ -59,6 +59,9 @@
           </template>
         </v-file-input>
       </v-col>
+      <v-col class="d-flex" sm="2">
+        <v-btn outlined rounded color="primary" height="55px" @click="searchImage">젬스톤 검색시작</v-btn>
+      </v-col>
     </v-row>
 
     <v-carousel id="preview">
@@ -82,15 +85,22 @@ export default {
     main_select: { label: "모험가", value: "adventurer" },
     sub_select: { label: "히어로", value: "Hero" },
     files: [],
-    previewimage: [require('@/assets/image/coregemstone.png')],
+    previewimage: [require("@/assets/image/coregemstone.png")],
   }),
   methods: {
     changepreviewimage() {
-      this.previewimage=[];
+      this.previewimage = [];
       let tmp = document.querySelector("input[type=file]").files;
       for (let i = 0; i < tmp.length; i++) {
         this.previewimage.push(URL.createObjectURL(tmp[i]));
       }
+    },
+    searchImage(){
+      console.log(this.main_select.value,this.sub_select.value,this.files);
+      console.log(document.querySelector("input[type=file]").files);
+    },
+    onChange(value){
+      console.log(value);
     },
   },
 };
