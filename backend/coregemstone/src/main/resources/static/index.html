@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
- good
+<form action="coregem/get-core-list" method="post" enctype="multipart/form-data">
+<input name="a" type="text">
+<input name="b" type="text">
+<label for="upfile">파일:</label>
+<input type="file" name="upfile" multiple="multiple">
+<input type="submit" value="게시판쓰기">
+</form>
 </body>
 </html>
