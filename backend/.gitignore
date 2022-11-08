@@ -2,3 +2,4 @@
 /Servers/
 *.class
 */bin/*
+/coregemstone/src/main/resources/utilImage/*

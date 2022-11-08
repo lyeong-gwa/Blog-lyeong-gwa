@@ -17,9 +17,9 @@ public class CogemServiceImpl implements CogemService{
 	CogemUtil cogemutil;
 	
 	@Override
-	public List<Coregemstone> getCogemList(MultipartFile[] files) throws IOException {
-		List<Coregemstone> cogem_list = cogemutil.getCogemList(files);
-		return null;
+	public List<Coregemstone> getCogemList(MultipartFile[] files,String session_id,String job) throws IOException {
+		List<Coregemstone> cogem_list = cogemutil.getCogemList(files,session_id,job);
+		return cogem_list;
 	}
 
 }

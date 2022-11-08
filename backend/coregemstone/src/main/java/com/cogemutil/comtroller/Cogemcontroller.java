@@ -1,8 +1,13 @@
 package com.cogemutil.comtroller;
 
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,13 +26,12 @@ public class Cogemcontroller {
 	@Autowired
 	CogemService service_cogem;
 	
-	@PostMapping("/get-core-list")
-	public ResponseEntity<?> getCoreList(@RequestParam Map<String, String> map, @RequestParam("upfile") MultipartFile[] files){
+	@PostMapping(value="/get-core-list", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> getCoreList(HttpSession session,@RequestParam("job") String job, @RequestParam("upfile") MultipartFile[] files){
 		try {
+			List<Coregemstone> cogem_list = service_cogem.getCogemList(files,session.getId(),job);
 			
-			service_cogem.getCogemList(files);
-			
-			return new ResponseEntity<Object>("success", HttpStatus.OK);
+			return new ResponseEntity<Object>(cogem_list, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

@@ -36,6 +36,7 @@
           outlined
           @change="changepreviewimage"
           :show-size="1000"
+          ref="file"
         >
           <template v-slot:selection="{ fileNames }">
             <div v-for="(fileName, index) in fileNames" :key="fileName">
@@ -60,7 +61,7 @@
         </v-file-input>
       </v-col>
       <v-col class="d-flex" sm="2">
-        <v-btn outlined rounded color="primary" height="55px" @click="searchImage">젬스톤 검색시작</v-btn>
+        <v-btn outlined rounded color="primary" height="55px" @click="searchImage">코어정보 확인하기</v-btn>
       </v-col>
     </v-row>
 
@@ -77,6 +78,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "CogemUtil-component",
   data: () => ({
@@ -96,12 +98,26 @@ export default {
       }
     },
     searchImage(){
-      console.log(this.main_select.value,this.sub_select.value,this.files);
-      console.log(document.querySelector("input[type=file]").files);
+      let formdata = new FormData();
+      formdata.append("job",this.sub_select.value);
+      this.files.forEach(item => formdata.append("upfile",item));
+      axios({
+        method:'post',
+        url:'http://192.168.219.169/coregem/get-core-list',
+        data: formdata,
+        headers: {'Content-Type': 'multipart/form-data'}
+      })
+            .then(function(response) {
+            console.log(response);
+            })
+            .catch(function(error) {
+            console.log(error);
+            });
     },
     onChange(value){
       console.log(value);
     },
+    
   },
 };
 </script>

@@ -8,5 +8,5 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cogemutil.dto.Coregemstone;
 
 public interface CogemService {
-	public List<Coregemstone> getCogemList(MultipartFile[] files) throws IOException;
+	public List<Coregemstone> getCogemList(MultipartFile[] files, String session_id,String job) throws IOException;
 }
