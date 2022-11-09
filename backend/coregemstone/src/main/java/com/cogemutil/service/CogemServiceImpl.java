@@ -1,6 +1,7 @@
 package com.cogemutil.service;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class CogemServiceImpl implements CogemService{
 		ResultGetCoreList result_get_core_list = new ResultGetCoreList();
 		cogemutil.getCogemList(files,job,result_get_core_list);//이미지에 라벨링, 코어리스트에 img할당된 상태
 		cogemutil.setCogemListLabeling(job,result_get_core_list);
+		
+//		for(Coregemstone core: result_get_core_list.getCore_list()) {
+//			System.out.println(core.getLevel());
+//			System.out.println(Arrays.toString(core.getSkill_data()));
+//		}
 		
 		return result_get_core_list;
 	}

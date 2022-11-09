@@ -31,7 +31,6 @@ public class Cogemcontroller {
 			@RequestParam("upfile") MultipartFile[] files) {
 		try {
 			ResultGetCoreList result_get_core_list = service_cogem.getCogemList(files, session.getId(), job);
-			System.out.println(result_get_core_list.getCore_list().get(0).getSkill_data()[0]);
 			return new ResponseEntity<Object>(result_get_core_list.getRequest_image_list().get(0), HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
