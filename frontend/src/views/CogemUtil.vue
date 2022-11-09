@@ -74,7 +74,8 @@
         transition="fade-transition"
       ></v-carousel-item>
     </v-carousel>
-  </v-container>
+    <img :src="sampleimage" alt="아직없음">
+    </v-container>
 </template>
 
 <script>
@@ -88,6 +89,7 @@ export default {
     sub_select: { label: "히어로", value: "Hero" },
     files: [],
     previewimage: [require("@/assets/image/coregemstone.png")],
+    sampleimage:'',
   }),
   methods: {
     changepreviewimage() {
@@ -103,12 +105,13 @@ export default {
       this.files.forEach(item => formdata.append("upfile",item));
       axios({
         method:'post',
-        url:'http://192.168.219.169/coregem/get-core-list',
+        url:'http://127.0.0.1/coregem/get-core-list',
         data: formdata,
         headers: {'Content-Type': 'multipart/form-data'}
-      })
-            .then(function(response) {
-            console.log(response);
+        })
+            .then((response) => {
+            console.log(response.data);
+            this.sampleimage = response.data;
             })
             .catch(function(error) {
             console.log(error);

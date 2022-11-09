@@ -1,9 +1,15 @@
 package com.cogemutil.dto;
 
+import java.awt.image.BufferedImage;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({ "img" })
 public class Coregemstone {
 	private int core_id;
 	private int level;
 	private int[] skill_data;// [왼쪽(메인),중간,오른쪽]
+	private BufferedImage img;
 	public Coregemstone() {}
 	public Coregemstone(int core_id, int level, int[] skill_data) {
 		super();
@@ -29,5 +35,13 @@ public class Coregemstone {
 	public void setSkill_data(int[] skill_data) {
 		this.skill_data = skill_data;
 	}
-
+	public BufferedImage getImg() {
+		return img;
+	}
+	public void setImg(BufferedImage img) {
+		this.img = img;
+	}
+	public void changeSkill_data(int index,int skill) {
+		this.skill_data[index] = skill;
+	}
 }
