@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultGetCoreList {
-	int[] skill_level;
 	List<Coregemstone> core_list;
 	List<String> request_image_list;
 	
@@ -13,17 +12,10 @@ public class ResultGetCoreList {
 		this.core_list = new ArrayList<>();
 		this.request_image_list = new ArrayList<>();
 	}
-	public ResultGetCoreList(int[] skill_level, List<Coregemstone> core_list, List<String> request_image_list) {
+	public ResultGetCoreList(List<Coregemstone> core_list, List<String> request_image_list) {
 		super();
-		this.skill_level = skill_level;
 		this.core_list = core_list;
 		this.request_image_list = request_image_list;
-	}
-	public int[] getSkill_level() {
-		return skill_level;
-	}
-	public void setSkill_level(int[] skill_level) {
-		this.skill_level = skill_level;
 	}
 	public List<Coregemstone> getCore_list() {
 		return core_list;

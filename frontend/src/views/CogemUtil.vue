@@ -40,20 +40,11 @@
         >
           <template v-slot:selection="{ fileNames }">
             <div v-for="(fileName, index) in fileNames" :key="fileName">
-              <v-chip
-                v-if="index < 2"
-                color="deep-purple-accent-4"
-                label
-                size="small"
-                class="mr-2"
-              >
+              <v-chip v-if="index < 2" color="deep-purple-accent-4" label size="small" class="mr-2">
                 {{ fileName }}
               </v-chip>
 
-              <span
-                v-else-if="index === 2"
-                class="text-overline text-grey-darken-3 mx-2"
-              >
+              <span v-else-if="index === 2" class="text-overline text-grey-darken-3 mx-2">
                 +{{ files.length - 2 }} File(s)
               </span>
             </div>
@@ -74,12 +65,11 @@
         transition="fade-transition"
       ></v-carousel-item>
     </v-carousel>
-    <img :src="sampleimage" alt="아직없음">
-    </v-container>
+  </v-container>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "CogemUtil-component",
   data: () => ({
@@ -89,7 +79,7 @@ export default {
     sub_select: { label: "히어로", value: "Hero" },
     files: [],
     previewimage: [require("@/assets/image/coregemstone.png")],
-    sampleimage:'',
+    sampleimage: "",
   }),
   methods: {
     changepreviewimage() {
@@ -99,28 +89,27 @@ export default {
         this.previewimage.push(URL.createObjectURL(tmp[i]));
       }
     },
-    searchImage(){
+    searchImage() {
       let formdata = new FormData();
-      formdata.append("job",this.sub_select.value);
-      this.files.forEach(item => formdata.append("upfile",item));
+      formdata.append("job", this.sub_select.value);
+      this.files.forEach((item) => formdata.append("upfile", item));
       axios({
-        method:'post',
-        url:'http://127.0.0.1/coregem/get-core-list',
+        method: "post",
+        url: "http://127.0.0.1/coregem/get-core-list",
         data: formdata,
-        headers: {'Content-Type': 'multipart/form-data'}
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then((response) => {
+          this.sampleimage = response.data.request_image_list[0];
+          console.log(response.data.core_list);
         })
-            .then((response) => {
-            console.log(response.data);
-            this.sampleimage = response.data;
-            })
-            .catch(function(error) {
-            console.log(error);
-            });
+        .catch(function (error) {
+          console.log(error);
+        });
     },
-    onChange(value){
+    onChange(value) {
       console.log(value);
     },
-    
   },
 };
 </script>
