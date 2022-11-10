@@ -1,115 +1,40 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col class="d-flex" sm="2">
-        <v-select
-          :items="main_category"
-          v-model="main_select"
-          label="직업 대분류"
-          item-value="value"
-          item-title="label"
-          return-object
-          solo
-        ></v-select>
-      </v-col>
-      <v-col class="d-flex" sm="2">
-        <v-select
-          :items="sub_category_list[main_select.value]"
-          v-model="sub_select"
-          label="직업 선택"
-          item-value="value"
-          item-title="label"
-          return-object
-          solo
-        ></v-select>
-      </v-col>
-
-      <v-col class="d-flex" sm="6">
-        <v-file-input
-          v-model="files"
-          color="deep-purple accent-4"
-          counter
-          label="코어창 이미지를 선택하시오(권장:15장)"
-          multiple
-          placeholder="Select your files"
-          prepend-icon="mdi-paperclip"
-          outlined
-          @change="changepreviewimage"
-          :show-size="1000"
-          ref="file"
-        >
-          <template v-slot:selection="{ fileNames }">
-            <div v-for="(fileName, index) in fileNames" :key="fileName">
-              <v-chip v-if="index < 2" color="deep-purple-accent-4" label size="small" class="mr-2">
-                {{ fileName }}
-              </v-chip>
-
-              <span v-else-if="index === 2" class="text-overline text-grey-darken-3 mx-2">
-                +{{ files.length - 2 }} File(s)
-              </span>
-            </div>
-          </template>
-        </v-file-input>
-      </v-col>
-      <v-col class="d-flex" sm="2">
-        <v-btn outlined rounded color="primary" height="55px" @click="searchImage">코어정보 확인하기</v-btn>
-      </v-col>
-    </v-row>
-
-    <v-carousel id="preview">
-      <v-carousel-item
-        v-for="(item, i) in previewimage"
-        :key="i"
-        :src="item"
-        reverse-transition="fade-transition"
-        transition="fade-transition"
-      ></v-carousel-item>
-    </v-carousel>
+    <v-tabs v-model="tab">
+      <v-tab>데이터 입력</v-tab>
+      <v-tab>입력값 분석결과</v-tab>
+      <v-tab>조합 찾기</v-tab>
+    </v-tabs>
+    <input-compo v-if="tab==0" @userCoreInfo="userCoreInfo"></input-compo>
+    <result-compo v-if="tab==1" :request_image_list="request_image_list"></result-compo>
   </v-container>
 </template>
 
 <script>
-import axios from "axios";
+import InputCompo from "@/components/CogemUtilCompo/CogemUtilInput.vue";
+import ResultCompo from "@/components/CogemUtilCompo/CogemUtilResult.vue";
+
 export default {
   name: "CogemUtil-component",
-  data: () => ({
-    main_category: require("@/data/CogemUtil/main_category.json"),
-    sub_category_list: require("@/data/CogemUtil/sub_category.json"),
-    main_select: { label: "모험가", value: "adventurer" },
-    sub_select: { label: "히어로", value: "Hero" },
-    files: [],
-    previewimage: [require("@/assets/image/coregemstone.png")],
-    sampleimage: "",
-  }),
-  methods: {
-    changepreviewimage() {
-      this.previewimage = [];
-      let tmp = document.querySelector("input[type=file]").files;
-      for (let i = 0; i < tmp.length; i++) {
-        this.previewimage.push(URL.createObjectURL(tmp[i]));
-      }
-    },
-    searchImage() {
-      let formdata = new FormData();
-      formdata.append("job", this.sub_select.value);
-      this.files.forEach((item) => formdata.append("upfile", item));
-      axios({
-        method: "post",
-        url: "http://127.0.0.1/coregem/get-core-list",
-        data: formdata,
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-        .then((response) => {
-          this.sampleimage = response.data.request_image_list[0];
-          console.log(response.data.core_list);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    onChange(value) {
-      console.log(value);
-    },
+  components: {
+    InputCompo,
+    ResultCompo
+  },create() {
+    this.tab=0;
   },
+  data() {
+    return {
+      tab: null,
+      core_list:[],
+      request_image_list:[],
+    };
+  },
+  methods:{
+    userCoreInfo(data){
+      this.core_list = data.core_list;
+      this.request_image_list = data.request_image_list;
+      this.tab = 1;
+    }
+  }
 };
 </script>

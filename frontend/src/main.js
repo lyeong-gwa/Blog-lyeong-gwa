@@ -10,8 +10,8 @@ import 'es6-promise/auto' //ES6방식의 promise 적용
 import store from './store/store' //store.js 사용
 
 //npm install bootstrap @properjs/core
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap"
+// import "bootstrap/dist/css/bootstrap.min.css"
+// import "bootstrap"
 loadFonts()
 
 createApp(App)
