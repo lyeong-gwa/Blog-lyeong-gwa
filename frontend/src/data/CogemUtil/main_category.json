@@ -1,0 +1,42 @@
+[
+    {
+        "label": "모험가",
+        "value": "adventurer"
+    },
+    {
+        "label": "시그너스",
+        "value": "cygnus"
+    },
+    {
+        "label": "레지스탕스",
+        "value": "resistance"
+    },
+    {
+        "label": "데몬",
+        "value": "daemon"
+    },
+    {
+        "label": "영웅",
+        "value": "hero"
+    },
+    {
+        "label": "노바",
+        "value": "nova"
+    },
+    {
+        "label": "레프",
+        "value": "Lev"
+    },
+    {
+        "label": "아니마",
+        "value": "anima"
+    },
+    {
+        "label": "제로",
+        "value": "zero"
+    },
+    {
+        "label": "키네시스",
+        "value": "kinesis"
+    }
+]
