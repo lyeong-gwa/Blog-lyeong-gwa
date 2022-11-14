@@ -10,6 +10,7 @@
           item-text="label"
           return-object
           solo
+          @change="change_main"
         ></v-select>
       </v-col>
       <v-col class="d-flex" sm="2">
@@ -27,6 +28,7 @@
       <v-col class="d-flex" sm="6">
         <v-file-input
           v-model="files"
+          accept="image/png, image/jpeg"
           color="deep-purple accent-4"
           label="코어창 이미지를 선택하시오(권장:15장)"
           multiple
@@ -62,7 +64,7 @@
         transition="fade-transition"
       >
         <div >
-          <v-img :src="item" contain max-height="450px"></v-img>
+          <v-img :src="item" contain max-height="450px" ></v-img>
         </div>
       </v-carousel-item>
     </v-carousel>
@@ -92,6 +94,7 @@ export default {
     searchImage() {
       let formdata = new FormData();
       formdata.append("job", this.sub_select.value);
+      formdata.append("job_kr", this.sub_select.label);
       this.files.forEach((item) => formdata.append("upfile", item));
       axios({
         method: "post",
@@ -106,9 +109,9 @@ export default {
           console.log(error);
         });
     },
-    onChange(value) {
-      console.log(value);
-    },
+    change_main(){
+      this.sub_select = this.sub_category_list[this.main_select.value][0];
+    }
   },
 };
 </script>

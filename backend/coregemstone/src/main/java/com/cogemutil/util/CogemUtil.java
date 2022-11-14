@@ -12,8 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 import com.cogemutil.dto.Coregemstone;
 import com.cogemutil.dto.ResultGetCoreList;
@@ -22,7 +27,7 @@ public class CogemUtil {
 
 	private final static String UTILIMAGEPATH = "src/main/resources/utilImage/";
 
-	public static void getCogemList(MultipartFile[] files, String job, ResultGetCoreList result_get_core_list)
+	public void getCogemList(MultipartFile[] files, String job, ResultGetCoreList result_get_core_list)
 			throws IOException {
 		List<Coregemstone> result = new ArrayList<>();
 		int cnt = 0;
@@ -30,12 +35,13 @@ public class CogemUtil {
 			BufferedImage image = ImageIO.read(files[i].getInputStream());
 			cnt = searchPoint(image, job, result, cnt, result_get_core_list);
 		}
+
 		result_get_core_list.setCore_list(result);
 
 	}
 
 	// 코어위치를 찾기위한 특정 이미지를 기준으로 좌표파악
-	public static int searchPoint(BufferedImage user_img, String job, List<Coregemstone> result, int cnt,
+	public int searchPoint(BufferedImage user_img, String job, List<Coregemstone> result, int cnt,
 			ResultGetCoreList result_get_core_list) throws IOException {
 		BufferedImage zero_img = ImageIO.read(new File(UTILIMAGEPATH + "zero_target.png"));
 		Graphics2D g = user_img.createGraphics();
@@ -148,10 +154,12 @@ public class CogemUtil {
 			list.get(i).setSkill_data(tmp_list);
 
 		}
+		list = list.stream().filter(a -> a.getSkill_data()[2] != -1).collect(Collectors.toList());
+		result_get_core_list.setCore_list(list);
 
 	}
-	
-	//서버가 가지고 있지 않는 코어이미지라면 저장
+
+	// 서버가 가지고 있지 않는 코어이미지라면 저장
 	public void makeSkillMixImage(String job, ResultGetCoreList result_get_core_list) {
 		for (Coregemstone core : result_get_core_list.getCore_list()) {
 			int[] target_list = core.getSkill_data();
@@ -169,6 +177,24 @@ public class CogemUtil {
 		}
 	}
 
+	public Resource getResourceImage(String job, String skill_name) {
+		String target_path = UTILIMAGEPATH + "skill_origin/" + job + "/" + skill_name;
+		Resource resource = new FileSystemResource(target_path);
+		if (resource.exists()) {
+			return resource;
+		} else {
+			return null;
+		}
+	}
+
+	public void setJobSkillName(String job, ResultGetCoreList result_get_core_list) {
+		File[] file_list = new File(UTILIMAGEPATH + "skill_origin/" + job).listFiles();
+		Arrays.sort(file_list, new FileComparator());
+		for (File tmp_file : file_list) {
+			result_get_core_list.addSkillName(tmp_file.getName());
+		}
+	}
+
 	// 리눅스환경을 위해 이름순으로 파일을 담기위한 Comparator(이름순 정렬되어있는 것을 보장하지 않는다.)
 	class FileComparator implements Comparator<File> {
 		@Override
@@ -177,8 +203,9 @@ public class CogemUtil {
 		}
 	}
 
-	// user_img와 src_img 이미지 비교 return값은 오차율, png, jpg차이 혹은 게임 패치에 의한 픽셀조정에 따라서 오차율 5%는 감안해야 정확히 나옴
-	public static double matchImage(BufferedImage user_img, BufferedImage src_img) {
+	// user_img와 src_img 이미지 비교 return값은 오차율, png, jpg차이 혹은 게임 패치에 의한 픽셀조정에 따라서 오차율
+	// 5%는 감안해야 정확히 나옴
+	public double matchImage(BufferedImage user_img, BufferedImage src_img) {
 		long diff = 0;
 		for (int r = 0; r < src_img.getHeight(); r++) {
 			for (int c = 0; c < src_img.getWidth(); c++) {

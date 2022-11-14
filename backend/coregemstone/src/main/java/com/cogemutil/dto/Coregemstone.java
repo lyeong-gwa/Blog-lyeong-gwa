@@ -1,6 +1,7 @@
 package com.cogemutil.dto;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -44,4 +45,7 @@ public class Coregemstone {
 	public void changeSkill_data(int index,int skill) {
 		this.skill_data[index] = skill;
 	}
+	
+	
+	
 }

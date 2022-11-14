@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import AppBar from "./components/core/AppBar.vue";
-import Drawer from "./components/core/Drawer";
+import AppBar from "./components/Core/AppBar";
+import Drawer from "./components/Core/Drawer";
 
 export default {
   name: "App",

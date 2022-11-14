@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,12 +25,14 @@ public class CogemServiceImpl implements CogemService{
 		cogemutil.getCogemList(files,job,result_get_core_list);//이미지에 라벨링, 코어리스트에 img할당된 상태
 		cogemutil.setCogemListLabeling(job,result_get_core_list);
 		cogemutil.makeSkillMixImage(job,result_get_core_list);
-//		for(Coregemstone core: result_get_core_list.getCore_list()) {
-//			System.out.println(core.getLevel());
-//			System.out.println(Arrays.toString(core.getSkill_data()));
-//		}
-		
+		cogemutil.setJobSkillName(job,result_get_core_list);
 		return result_get_core_list;
 	}
 
+	@Override
+	public Resource getResourceImage(String job, String skill_name) {
+		
+		return cogemutil.getResourceImage(job,skill_name);
+	}
+	
 }
