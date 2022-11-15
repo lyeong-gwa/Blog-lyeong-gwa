@@ -28,7 +28,6 @@
 
 <script>
 export default {
-  name: "Home-component",
   data: () => ({
     cards: require("@/data/core/Home.json"),
   }),

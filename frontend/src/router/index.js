@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import CogemUtil from '../views/CogemUtil.vue'
-import About from '../views/About.vue'
+import Home from '../views/HomeView.vue'
+import CogemUtil from '../views/CogemUtilView.vue'
+import About from '../views/AboutView.vue'
 
 Vue.use(VueRouter)
 
@@ -13,15 +13,12 @@ const routes = [
     redirect: '/Home'
   },{
     path: '/Home',
-    name: 'Home-route',
     component: Home,
   },{
     path: '/CogemUtil',
-    name: 'CogemUtil-route',
     component: CogemUtil,
   },{
     path: '/About',
-    name: 'About-route',
     component: About,
   }
 ];

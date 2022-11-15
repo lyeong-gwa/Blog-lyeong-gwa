@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import CoreStore from './core.js'
+import CogemUtilStore from './cogemutil.js'
 export default new Vuex.Store({
   state: {
   },
@@ -15,5 +16,6 @@ export default new Vuex.Store({
   },
   modules: {
     core:CoreStore,
+    cogemutil:CogemUtilStore,
   }
 })

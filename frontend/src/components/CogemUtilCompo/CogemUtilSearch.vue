@@ -13,7 +13,7 @@
           solo
         ></v-select>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="4">
         <v-select
           :items="select_subcore_use"
           v-model="sub_core_use"
@@ -40,7 +40,7 @@
     <br />
     <hr />
     <h1 style="margin-bottom: 5px">
-      선택 결과 (왼쪽에 있는 스킬부터 탐색합니다.)
+      선택 결과 (왼쪽에 있는 스킬부터 탐색합니다.) <v-btn class="primary">조합 검색시작</v-btn>
     </h1>
     <table>
       <tr>
@@ -51,7 +51,7 @@
             </v-col>
           </v-row>
         </th>
-        <th></th>
+        
       </tr>
     </table>
     <br />
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import SkillCard from "@/components/Unit/SkillCard.vue";
+import SkillCard from "@/components/CogemUtilCompo/Unit/SkillCard.vue";
 export default {
   name: "CogemUtil-Search",
   components: {
@@ -77,8 +77,8 @@ export default {
       core_use_count: 2,
       select_core_use: [2, 3, 4, 5, 6, 7],
       select_subcore_use: [
-        { label: "비선택 스킬도 활용", value: "true" },
-        { label: "선택한 스킬만 활용", value: "false" },
+        { label: "비선택 스킬도 강화에 활용", value: "true" },
+        { label: "선택한 스킬만 강화에 활용", value: "false" },
       ],
       sub_core_use: { label: "비선택 스킬도 활용", value: "true" },
     };
@@ -100,6 +100,9 @@ export default {
         console.log("삭제", data.val);
         this.selected = this.selected.filter((item) => item != data.val);
       }
+    },
+    skill_info(arr) {
+      return this.skill_selected.filter((x) => arr.includes(x)).length;
     },
   },
 };

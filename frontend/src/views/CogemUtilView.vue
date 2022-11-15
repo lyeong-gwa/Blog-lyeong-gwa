@@ -6,22 +6,21 @@
       <v-tab>조합 찾기</v-tab>
     </v-tabs>
     <input-compo v-if="tab==0" @userCoreInfo="userCoreInfo"></input-compo>
-    <result-compo v-else-if="tab==1" :request_image_list="request_image_list" 
+    <!-- <result-compo v-else-if="tab==1" :request_image_list="request_image_list" 
     :core_list="core_list" :job="job" :job_kr="job_kr" :skill_name="skill_name" :core_level="core_level"></result-compo>
-    <search-compo v-else-if="tab==2" :job="job" :job_kr="job_kr" :skill_name="skill_name"></search-compo>
+    <search-compo v-else-if="tab==2" :job="job" :job_kr="job_kr" :skill_name="skill_name"></search-compo> -->
   </v-container>
 </template>
 
 <script>
 import InputCompo from "@/components/CogemUtilCompo/CogemUtilInput.vue";
-import ResultCompo from "@/components/CogemUtilCompo/CogemUtilResult.vue";
-import SearchCompo from "@/components/CogemUtilCompo/CogemUtilSearch.vue";
+// import ResultCompo from "@/components/CogemUtilCompo/CogemUtilResult.vue";
+// import SearchCompo from "@/components/CogemUtilCompo/CogemUtilSearch.vue";
 export default {
-  name: "CogemUtil-component",
   components: {
     InputCompo,
-    ResultCompo,
-    SearchCompo
+    // ResultCompo,
+    // SearchCompo
   },create() {
     this.tab=0;
   },

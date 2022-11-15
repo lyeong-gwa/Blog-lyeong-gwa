@@ -14,7 +14,7 @@ const getters = {
 
 const actions = {
   changeDrawer(context){
-    context.commit('changeDrawer',{a:"1"});
+    context.commit('changeDrawer');
   }
 }
 
