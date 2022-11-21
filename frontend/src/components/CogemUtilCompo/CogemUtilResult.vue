@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>선택직업 :{{ job_kr }}</h1>
+    <h1>선택직업 :{{ getJobKr }}</h1>
     <v-carousel id="resultimage">
       <v-carousel-item
         v-for="(item, i) in request_image_list"
@@ -113,15 +113,19 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+const cogemutilHelper = createNamespacedHelpers("cogemutil");
 export default {
   name: "CogemUtil-Result",
-  props: {
-    request_image_list: Array,
-    core_list: Array,
-    job: String,
-    job_kr: String,
-    skill_name: Array,
-    core_level: Array,
+  computed: {
+    ...cogemutilHelper.mapGetters([
+      "getCoreList",
+      "getRequestImageList",
+      "getJob",
+      "getJobKr",
+      "getSkillName",
+      "getCoreLeve",
+    ]),
   },
   data() {
     return {

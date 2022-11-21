@@ -59,10 +59,12 @@
         rounded
         color="primary"
         height="55px"
-        @click="searchImage({ files, sub_select })"
+        @click="searchImage(requestForm)"
+        :disabled="getUploadWait"
         >코어정보 확인하기</v-btn
       >
     </v-col>
+
   </v-row>
 </template>
 
@@ -78,18 +80,22 @@ export default {
     files: [],
   }),
   methods: {
+    //대분류에 따른 세부분류 변환
     change_main() {
       this.sub_select = this.sub_category_list[this.main_select.value][0];
     },
+    //미리보기 이미지 전환
     changepreviewimage() {
       this.$emit("changepreviewimage", this.files);
     },
+    //서버요청, 이미지, 직업 데이터에 따른 요청
     ...cogemutilHelper.mapActions(["searchImage"]),
   },
   computed: {
     requestForm() {
       return {sub_select:this.sub_select,files:this.files};
     },
+    ...cogemutilHelper.mapGetters(["getUploadWait"]),
   },
 };
 </script>

@@ -60,16 +60,22 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+const cogemutilHelper = createNamespacedHelpers("cogemutil");
+
 import SkillCard from "@/components/CogemUtilCompo/Unit/SkillCard.vue";
 export default {
   name: "CogemUtil-Search",
   components: {
     SkillCard,
   },
-  props: {
-    job: String,
-    job_kr: String,
-    skill_name: Array,
+  // props: {
+  //   job: String,
+  //   job_kr: String,
+  //   skill_name: Array,
+  // },
+  computed:{
+    ...cogemutilHelper.mapState(["job","job_kr","skill_name"]),
   },
   data() {
     return {
