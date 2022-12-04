@@ -13,7 +13,7 @@
     </v-tabs>
     <InputCompo v-if="tab == 0" />
     <result-compo v-else-if="tab==1"></result-compo>
-    <!-- <search-compo v-else-if="tab==2" :job="job" :job_kr="job_kr" :skill_name="skill_name"></search-compo> -->
+    <search-compo v-else-if="tab==2"></search-compo>
   </v-container>
 </template>
 
@@ -24,12 +24,12 @@ const cogemutilHelper = createNamespacedHelpers("cogemutil");
 
 import InputCompo from "@/components/CogemUtilCompo/CogemUtilInput.vue";
 import ResultCompo from "@/components/CogemUtilCompo/CogemUtilResult.vue";
-// import SearchCompo from "@/components/CogemUtilCompo/CogemUtilSearch.vue";
+import SearchCompo from "@/components/CogemUtilCompo/CogemUtilSearch.vue";
 export default {
   components: {
     InputCompo,
     ResultCompo,
-    // SearchCompo,
+    SearchCompo,
     PulseLoader,
   },
   create() {

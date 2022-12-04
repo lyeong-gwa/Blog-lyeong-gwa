@@ -3,7 +3,7 @@
     <h1>선택직업 :{{ getJobKr }}</h1>
     <v-carousel id="resultimage">
       <v-carousel-item
-        v-for="(item, i) in request_image_list"
+        v-for="(item, i) in getRequestImageList"
         :key="i"
         reverse-transition="fade-transition"
         transition="fade-transition"
@@ -30,7 +30,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="core in core_list" :key="core.core_id">
+              <tr v-for="core in getCoreList" :key="core.core_id">
                 <td>{{ core.core_id }}</td>
                 <td>
                   <v-img
@@ -91,7 +91,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(skill, i) in skill_name" :key="i">
+              <tr v-for="(skill, i) in getSkillName" :key="i">
                 <td>{{ i }}</td>
 
                 <td>
@@ -99,7 +99,7 @@
                 </td>
 
                 <td style="font-size: 0.7em">{{ skill }}</td>
-                <td>{{ core_level[i] }}</td>
+                <td>{{ getCoreLeve[i] }}</td>
                 <td>
                   <v-checkbox v-model="skill_selected" :value="i"></v-checkbox>
                 </td>
@@ -136,9 +136,9 @@ export default {
     imgPath(num) {
       return (
         "http://127.0.0.1/coregem/skill/" +
-        this.job +
+        this.getJob +
         "/" +
-        this.skill_name[num]
+        this.getSkillName[num]
       );
     },
     skill_info(arr) {
