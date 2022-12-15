@@ -19,7 +19,6 @@ const getters = {
     return state.core_list;
   },
   getRequestImageList(){
-    console.log(state.request_image_list);
     return state.request_image_list;
   },
   getJob(){
@@ -38,7 +37,7 @@ const getters = {
 
 const actions = {
   //CogemUtilInput 비동기처리
-  searchImage({commit},payload) {
+  searchImage({state,commit},payload) {
     state.upload_wait=true;
     let formdata = new FormData();
     formdata.append("job", payload.sub_select.value);
@@ -54,7 +53,9 @@ const actions = {
         commit('USERCOREINFO',response.data);
       })
       .catch(function (error) {
-        console.log(error);
+        alert(`error:문제가 발생하였습니다. 잠시 후 다시 이용해주세요.
+        ${error}`);
+        state.upload_wait=false;
       });
   }
 }

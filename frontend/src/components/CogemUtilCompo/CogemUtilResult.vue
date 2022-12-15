@@ -98,7 +98,7 @@
                   <v-img :src="imgPath(i)" height="60" width="48"></v-img>
                 </td>
 
-                <td style="font-size: 0.7em">{{ skill }}</td>
+                <td style="font-size: 0.7em">{{ removeExtension(skill) }}</td>
                 <td>{{ getCoreLeve[i] }}</td>
                 <td>
                   <v-checkbox v-model="skill_selected" :value="i"></v-checkbox>
@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import domain from "@/util/domain.js";
 import { createNamespacedHelpers } from "vuex";
 const cogemutilHelper = createNamespacedHelpers("cogemutil");
 export default {
@@ -126,6 +127,7 @@ export default {
       "getSkillName",
       "getCoreLeve",
     ]),
+    
   },
   data() {
     return {
@@ -135,7 +137,7 @@ export default {
   methods: {
     imgPath(num) {
       return (
-        "http://127.0.0.1/coregem/skill/" +
+        `${domain}coregem/skill/` +
         this.getJob +
         "/" +
         this.getSkillName[num]
@@ -143,6 +145,9 @@ export default {
     },
     skill_info(arr) {
       return this.skill_selected.filter((x) => arr.includes(x)).length;
+    },
+    removeExtension(name){
+      return name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/,'');
     },
   },
 };

@@ -25,7 +25,7 @@ export default {
   
   methods:{
     check(target){
-        console.log(target,"보냄");
+        //console.log(target,"보냄");
         this.$emit("selectedChange", target);
     },
     check_val(check,val){

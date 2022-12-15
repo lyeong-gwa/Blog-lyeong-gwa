@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import domain from "./domain";
 export default axios.create({
-  baseURL: "http://127.0.0.1/",
+  baseURL: domain,
 });

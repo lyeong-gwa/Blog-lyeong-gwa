@@ -11,9 +11,9 @@
       <v-tab>입력값 분석결과</v-tab>
       <v-tab>조합 찾기</v-tab>
     </v-tabs>
-    <InputCompo v-if="tab == 0" />
-    <result-compo v-else-if="tab==1"></result-compo>
-    <search-compo v-else-if="tab==2"></search-compo>
+    <InputCompo v-show="tab == 0" />
+    <result-compo v-show="tab==1"></result-compo>
+    <search-compo v-if="tab==2"></search-compo>
   </v-container>
 </template>
 
