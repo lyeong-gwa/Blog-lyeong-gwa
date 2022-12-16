@@ -4,6 +4,11 @@
     :items="core_list"
     sort-by="calories"
     class="elevation-1"
+    :footer-props="{
+      'items-per-page-text': '페이지 당 보여줄 조합',
+      'items-per-page-options': [5, 10, 15, 20],
+      pageText: '총 {2}개 항목 중 {0}-{1}',
+    }"
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -16,36 +21,7 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                    ></v-text-field>
-                  </v-col>
+                  {{selectItem}}
                 </v-row>
               </v-container>
             </v-card-text>
@@ -272,7 +248,7 @@
 
     <!-- 정보확인 -->
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+      <v-icon small class="mr-2" @click="LookItem(item)"> mdi-pencil </v-icon>
     </template>
 
     <!-- 데이터가 없을 경우 -->
@@ -292,12 +268,7 @@ export default {
     dialog: false,
     headers: [],
     core_list: [],
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+    selectItem: {
     },
   }),
   computed: {
@@ -308,30 +279,11 @@ export default {
       val || this.close();
     },
     combi_list: function (val) {
-      val;
-      this.core_list = [
-        {
-          data: [1, 2, 3, 4, 5, 6 ],
-        },
-        {
-          data: [2, 3, 4, 5, 6, 7],
-        },
-        {
-          data: [3, 4, 5, 6, 7, 1],
-        },
-        {
-          data: [4, 5, 6, 7, 1, 2],
-        },
-        {
-          data: [5, 6, 7, 1, 2, 3],
-        },
-        {
-          data: [6, 7, 1, 2, 3, 4],
-        },
-        {
-          data: [7, 1, 2, 3, 4, 5],
-        },
-      ];
+      this.core_list = [];
+      let header_len = 8;
+      if(val.length!=0){
+        header_len = val[0].data.length + 1;
+      }
       this.headers = [
         { text: "정보확인", value: "actions", sortable: false },
         { text: "1번", value: "data[0]" },
@@ -341,7 +293,9 @@ export default {
         { text: "5번", value: "data[4]" },
         { text: "6번", value: "data[5]" },
         { text: "7번", value: "data[6]" },
-      ].slice(0,this.cre_list.length+1);
+      ].slice(0, header_len);
+      this.core_list = val;
+      
     },
   },
 
@@ -351,18 +305,6 @@ export default {
 
   methods: {
     initialize() {
-      this.core_list = [
-        {
-          data: [1, 2, 3, 4, 5, 1],
-        },
-        {
-          data: [2, 3, 4, 5, 6, 1],
-        },
-        {
-          data: [3, 4, 5, 6, 7, 1],
-        },
-      ];
-
       this.headers = [
         { text: "정보확인", value: "actions", sortable: false },
         { text: "1번", value: "data[0]" },
@@ -372,11 +314,11 @@ export default {
         { text: "5번", value: "data[4]" },
         { text: "6번", value: "data[5]" },
         { text: "7번", value: "data[6]" },
-      ].slice(0,this.core_list.length+1);
+      ].slice(0, 8);
     },
 
-    editItem(item) {
-      this.editedItem = Object.assign({}, item);
+    LookItem(item) {
+      this.selectItem = Object.assign({}, item);
       this.dialog = true;
     },
 
@@ -385,7 +327,6 @@ export default {
     },
 
     imgPath(data) {
-      console.log(data.num, this.getCoreList[data.num]);
       let target = this.getCoreList[data.num].skill_data[data.idx];
       return (
         `${domain}coregem/skill/` +
