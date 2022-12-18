@@ -291,6 +291,9 @@ export default {
       //console.log(this.result_combi_list.length);
     },
     searchTree(tree, limit, arr) {
+      if(this.result_combi_list.length>10000000){
+        return;
+      }
       if (Object.keys(tree).length == 0) {
         this.result_combi_list.push({data:arr});
       } else {

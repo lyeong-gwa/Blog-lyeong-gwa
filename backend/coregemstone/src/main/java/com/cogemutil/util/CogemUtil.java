@@ -25,7 +25,7 @@ import com.cogemutil.dto.ResultGetCoreList;
 
 public class CogemUtil {
 
-	private final static String UTILIMAGEPATH = "src/main/resources/utilImage/";
+	private final static String UTILIMAGEPATH = "/utilImage/";
 
 	public void getCogemList(MultipartFile[] files, String job, ResultGetCoreList result_get_core_list)
 			throws IOException {
