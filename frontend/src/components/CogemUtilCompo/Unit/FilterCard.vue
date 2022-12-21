@@ -1,5 +1,10 @@
 <template>
-  <v-card class="mx-auto" max-height="80" outlined>
+  <v-card
+    :class="{ 'mx-auto': true, 'blue lighten-4': this_selected }"
+    max-height="80"
+    outlined
+  >
+ 
     <v-list-item three-line>
       <v-list-item-avatar tile height="50" width="32">
         <v-img :src="img_src" height="50" width="32"></v-img>
@@ -8,8 +13,8 @@
       <v-list-item-content right>
         <v-list-item-title style="font-size: 1.2em">
           <v-row>
-            <v-col cols="6" style="margin-top: 15px"> 
-              {{info}}
+            <v-col cols="6" style="margin-top: 15px">
+              {{ info }}
             </v-col>
             <v-col cols="6">
               <v-range-slider
@@ -42,8 +47,10 @@ export default {
     idx: Number,
     limit: Number,
     all_range: Array,
+    this_selected: Boolean,
   },
-
+  computed: {
+  },
   data() {
     return {
       range: [0, 7],
@@ -57,7 +64,10 @@ export default {
       this.$emit("changeFilter", { target: this.idx, range: new_range });
     },
     all_range: function (new_data) {
-      this.range = new_data;
+      if(this.this_selected){
+        this.range = new_data;
+      }
+      
     },
   },
 };

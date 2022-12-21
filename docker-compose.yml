@@ -1,45 +1,64 @@
 #version: 버전 예시 ->'3.3'
 version: '3.3'
 services:
-  # db:
-  #   build: ./MYSQL
-  #   volumes:
-  #     - ./MYSQL/mysql-init-files/:/docker-entrypoint-initdb.d/
-  #     - ./MYSQL/data/:/var/lib/mysql
-  #   #restart: always
-  #   container_name: db_mysql
-  #   environment:
-  #     - MYSQL_ALLOW_EMPTY_PASSWORD="true"
-  #     #- MYSQL_ROOT_PASSWORD=[비밀번호]
-  #   ports:
-  #     # 로컬:컨테이너
-  #     - '3333:3306'
-  #   networks:
-  #     - blog
+  db:
+    build: ./MYSQL
+    restart: always
+    container_name: db_mysql
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USER_ID}
+      - MYSQL_PASSWORD=${DB_USER_PASSWORD}
+      #- MYSQL_ALLOW_EMPTY_PASSWORD=true
+    ports:
+      # 로컬:컨테이너
+      - '3333:3306'
+    volumes:
+      - ./MYSQL/mysql-init-files/:/docker-entrypoint-initdb.d/
+      - ./res/data/:/var/lib/mysql
+    networks:
+      - blog
 
-  # frontend:
-  #   build: ./frontend
-  #   volumes:
-  #     - ./frontend:/srv/docker-server
-  #   #restart: always
-  #   container_name: frontend_vue
-  #   ports:
-  #     - '80:80'
-  #   networks:
-  #     - blog
+
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/srv/docker-server
+    restart: always
+    container_name: frontend_vue
+    environment:
+      - TZ=Asia/Seoul
+      - VUE_APP_SERVER_URL=${VUE_APP_SERVER_URL}
+    ports:
+      - '80:80'
+    networks:
+      - blog
   
+  # 도커 동작 순서 이해할 필요가 있어보임
+  # build할 때 Dockerfile을 처리하는데 volumes은 아래에 위치 mvn package로 스프링 프로젝트 접근x
   backend:
     build: ./backend
     container_name: backend_spring
-    #restart: always
-    command: sleep infinity
+    restart: always
     volumes:
       - ./backend:/srv/docker-server
-      - ./utilImage:/utilImage
+      - ./res/utilImage:/utilImage
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_USER=${DB_USER_ID}
+      - MYSQL_PASSWORD=${DB_USER_PASSWORD}
+      - URL=${URL}
     ports:
       - "8000:8000"
+      
+
+      #- mvn package 
+      #- java -jar /srv/docker-server/coregemstone-0.0.1-SNAPSHOT.jar # -로 여러줄 형태로 실행하면 이상하게 안됨
     networks:
       - blog
 networks:
   blog:
     driver: bridge
+    

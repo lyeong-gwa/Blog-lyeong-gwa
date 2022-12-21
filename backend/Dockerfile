@@ -7,7 +7,7 @@ ARG ZULU_REPO_VER=1.0.0-3
 
 RUN mkdir /srv/docker-server
 RUN mkdir /utilImage
-WORKDIR /srv/docker-server
+WORKDIR /srv/docker-server/coregemstone
 
 
 RUN apt-get -qq update && \
@@ -26,7 +26,11 @@ RUN apt-get -qq update && \
     rm -rf /var/lib/apt/lists/* zulu-repo_${ZULU_REPO_VER}_all.deb
 
 ENV JAVA_HOME=/usr/lib/jvm/zulu8-ca-amd64
-EXPOSE 8000
 
-# #RUN java -jar /usr/src/myapp/coregemstone.jar
+RUN apt-get -qq -y update && \
+    apt-get -y install maven
+EXPOSE 8000
+CMD mvn package && java -jar /srv/docker-server/coregemstone/target/coregemstone-0.0.1-SNAPSHOT.jar
+
+# #RUN java -jar /srv/docker-server/coregemstone/target/coregemstone-0.0.1-SNAPSHOT.jar
 # #CMD ["java", "-jar", "coregemstone.jar"]

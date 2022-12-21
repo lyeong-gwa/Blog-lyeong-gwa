@@ -1,15 +1,17 @@
-create database Blog_db;
+create database if not exists BlogDB;
 
-use Blog_db;
+use BlogDB;
 
-CREATE TABLE IF NOT EXISTS job 
-   (JOBID VARCHAR(10) NOT NULL, 
-	JOBTITLE VARCHAR(35), 
-	MINSAL INT(6), 
-	MAXSAL INT(6)
-   );
+CREATE TABLE IF NOT EXISTS `imageuploadtry` (
+  `id_date` DATE NOT NULL,
+  `id_hour` VARCHAR(3) NOT NULL,
+  `cnt` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id_date`, `id_hour`));
 
-
-Insert into job values ('AD_PRES','President',20080,40000);
-Insert into job values ('AD_VP','Administration Vice President',15000,30000);
-Insert into job values ('AD_ASST','Administration Assistant',3000,6000);
+CREATE TABLE IF NOT EXISTS `corecalctry` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `job` VARCHAR(10) NULL,
+  `core_num` INT NULL,
+  `select_skill` VARCHAR(50) NULL,
+  `combi_list_len` INT NULL,
+  PRIMARY KEY (`id`));

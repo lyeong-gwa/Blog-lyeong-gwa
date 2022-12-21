@@ -33,6 +33,11 @@ public class CogemUtil {
 		int cnt = 0;
 		for (int i = 0; i < files.length; i++) {
 			BufferedImage image = ImageIO.read(files[i].getInputStream());
+			int cut_width = image.getWidth();
+			int cut_height = image.getHeight();
+			cut_width = (cut_width-700)/2;
+			cut_height = (cut_height-580)/2;
+			image = image.getSubimage(cut_width, cut_height, 700, 580);
 			cnt = searchPoint(image, job, result, cnt, result_get_core_list);
 		}
 

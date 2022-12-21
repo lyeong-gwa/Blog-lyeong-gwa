@@ -91,6 +91,7 @@
         </v-col>
         <v-col cols="4">
           <div style="position: relative; right: 0px; top: 30%">
+            ↓ 선택한 스킬만 일괄적용 ↓
             <v-range-slider
               v-model="all_range"
               :max="core_use_count"
@@ -119,7 +120,7 @@
 
       <v-row v-show="toggle_set_calc == false">
         <v-col
-          v-for="target_skill_idx in selected"
+          v-for="(value, target_skill_idx) in getSkillName"
           :key="target_skill_idx"
           :cols="6"
         >
@@ -129,16 +130,20 @@
             :idx="target_skill_idx"
             :limit="core_use_count"
             :all_range="all_range"
+            :this_selected="selected.includes(target_skill_idx)"
             @changeFilter="changeFilter"
           ></FilterCard>
         </v-col>
+        <v-col cols="12">
+          <CombiTable :combi_list="this.result_combi_list"></CombiTable>
+        </v-col>
       </v-row>
     </div>
-    <CombiTable :combi_list="this.result_combi_list"></CombiTable>
   </div>
 </template>
 
 <script>
+import http from "@/util/http.js";
 import domain from "@/util/domain.js";
 import { createNamespacedHelpers } from "vuex";
 const cogemutilHelper = createNamespacedHelpers("cogemutil");
@@ -158,11 +163,33 @@ export default {
       this.map_core[i] = [];
     }
     for (let i = 0; i < this.getCoreList.length; i++) {
-      this.map_core[this.getCoreList[i].skill_data[0]].push(i);
+      let target_core = this.getCoreList[i].skill_data;
+      let target_list = this.map_core[this.getCoreList[i].skill_data[0]];
+
+      let duplicate = false;
+      for (let j = 0; j < target_list.length; j++) {
+        let unit_core = this.getCoreList[target_list[j]].skill_data; //미리들어간 코어
+        let cnt = 0;
+        for (let k = 0; k < unit_core.length; k++) {
+          if (target_core.includes(unit_core[k])) {
+            cnt++;
+          }
+        }
+        if (cnt == 3) {
+          duplicate = true;
+        }
+      }
+
+      if (!duplicate) {
+        this.map_core[this.getCoreList[i].skill_data[0]].push(i);
+      }
     }
-    console.log(this.getCoreList);
-    console.log(this.map_core);
-    
+    this.min_max_limit = {};
+    for (let i = 0; i < this.getSkillName.length; i++) {
+      this.min_max_limit[i] = [0, 2];
+    }
+    //console.log(this.getCoreList);
+    //console.log(this.map_core);
   },
   computed: {
     ...cogemutilHelper.mapGetters([
@@ -180,16 +207,16 @@ export default {
       select_core_use: [2, 3, 4, 5, 6, 7], // 사용할 코어개수 박스옵션
       select_subcore_use: [
         // 단기적으로 볼 것인가 장기적으로 볼 것인가
-        { label: "잡코어는 사용하지 않고 선택한 코어만 강화", value: "false" },
+        { label: "잡코어는 사용하지 않고 선택한 코어만 강화", value: false },
         {
           label:
             "필요한 스킬이 스킬1,스킬2,스킬3 이지만 필요에 따라서 스킬4도 강화",
-          value: "true",
+          value: true,
         },
       ],
       sub_core_use: {
         label: "잡코어는 사용하지 않고 선택한 코어만 강화",
-        value: "false",
+        value: false,
       },
 
       map_core: {}, //유저 소지코어 hashmap형태로 보관
@@ -230,12 +257,9 @@ export default {
     selectedChange(data) {
       if (data.check) {
         this.selected.push(data.val);
-
-        this.min_max_limit.push([0, this.core_use_count]);
       } else {
         let target_remove = this.selected.indexOf(data.val);
         this.selected.splice(target_remove, 1);
-        this.min_max_limit.splice(target_remove, 1);
       }
     },
     //몇중첩인지 출력
@@ -247,7 +271,8 @@ export default {
     },
 
     calcCombi() {
-      let sub_list = [];
+
+      let sub_list = []; //target_core는 2중첩 코어 가지고있는 라벨들만, sub_list는 선택한 스킬 이외의 코어들에서 2중첩인 경우
 
       if (this.selected.length < this.core_use_count) {
         for (let i in this.target_core) {
@@ -259,22 +284,77 @@ export default {
           }
         }
       }
-      // console.log(this.selected);
-      // console.log(sub_list);
+      //console.log(this.selected);
+      //console.log(sub_list);
+
+      //우선 2중첩 위주로 선택, 선택한 스킬에서만 한정
       let filter_select_2core = this.selected.filter(
         (x) => this.target_core[x].length != 0
       );
+      //선택 스킬에서 2중첩 코어들로만 구성하면 부족한 경우 -> 1개 있는 것도 사용한다.
+      //단 앞에서부터 접근(우선순위)하고 코어가 있는 것만 집어 넣는다.
+      if (filter_select_2core.length < this.core_use_count) {
+        for (let i = 0; i < this.selected.length; i++) {
+          if (
+            this.map_core[this.selected[i]].length != 0 &&
+            !filter_select_2core.includes(this.selected[i])
+          ) {
+            filter_select_2core.push(this.selected[i]);
+          }
+          if (filter_select_2core.length >= this.core_use_count) {
+            break;
+          }
+        }
+      }
 
+      //만약 그럼에도 코어 수를 채우지 못한다면?
+      //핵심코어가 아님에도 2중첩인 코어들 가져오기
+      let final_2core_list = [];
+      if (filter_select_2core.length < this.core_use_count) {
+        for (let i in this.target_core) {
+          if (
+            this.target_core[i].length != 0 &&
+            !filter_select_2core.includes(parseInt(i))
+          ) {
+            //2코어이면서 선택하지 않은 스킬일때
+            final_2core_list.push(parseInt(i));
+          }
+        }
+        final_2core_list = this.makeCombi(
+          final_2core_list,
+          this.core_use_count - filter_select_2core.length
+        );
+      }
       let make_combi_list = this.makeCombi(
         filter_select_2core,
         Math.min(filter_select_2core.length, this.core_use_count)
       );
-      console.log("실질적으로 사용할 2중첩 이상 선택코어", filter_select_2core);
-      console.log("코어 선택 경우의 수", make_combi_list.length);
+
+      //final_2core의 길이가 0이 아니라면 make_combi_list는 1개의 array로만 구성
+      //console.log(make_combi_list, this.sub_core_use.value);
+      if (final_2core_list.length != 0 && this.sub_core_use.value) {
+        let tmp_make_combi_list = [];
+        for (let i in make_combi_list) {
+          for (let j in final_2core_list) {
+            tmp_make_combi_list.push([
+              ...make_combi_list[i],
+              ...final_2core_list[j],
+            ]);
+          }
+        }
+        make_combi_list = tmp_make_combi_list;
+      }
+
+      // console.log(make_combi_list,final_2core_list);
+      // console.log("실질적으로 사용할 2중첩 이상 선택코어", filter_select_2core);
+      // console.log("코어 선택 경우의 수", make_combi_list.length);
       let tree = {};
 
+      //tree만들기 : [1,2,3] -> { 1:{2:3:{}}} 형태로
+      //[1,2,3] [1,2,4] 두개가 있을 때 { 1 : { 2: { 3 : {}, 4 : {} } } } DFS처리하기 용이함
       for (let i = 0; i < make_combi_list.length; i++) {
         let last_list = this.makeCoreList(make_combi_list[i]);
+
         for (let j = 0; j < last_list.length; j++) {
           let node = tree;
           for (let k = 0; k < last_list[j].length; k++) {
@@ -287,35 +367,57 @@ export default {
       }
       //console.log(tree);
       this.result_combi_list = [];
-      this.searchTree(tree, JSON.parse(JSON.stringify(this.min_max_limit)), []); //깊은 복사 필요
+      let count_state = {};
+      for (let i = 0; i < this.getSkillName.length; i++) {
+        count_state[i] = 0;
+      }
+      this.searchTree(tree, count_state, []); //깊은 복사 필요
       //console.log(this.result_combi_list.length);
+      
+      let formdata = new FormData();
+      formdata.append("job", this.getJob);
+      formdata.append("core_num", this.core_use_count);
+      formdata.append("select_skill", JSON.stringify(this.selected));
+      formdata.append("combi_list_len", this.result_combi_list.length);
+      
+      this.result_combi_list
+      http({
+        method: "post",
+        url: "/coregem/data_get",
+        data: formdata,
+      })
+        .then(() => {})
+        .catch(function (error) {
+          alert(`error:문제가 발생하였습니다. 잠시 후 다시 이용해주세요.
+        ${error}`);
+        });
     },
     searchTree(tree, limit, arr) {
-      if(this.result_combi_list.length>10000000){
+      if (this.result_combi_list.length > 100000) {
         return;
       }
       if (Object.keys(tree).length == 0) {
-        this.result_combi_list.push({data:arr});
+        for (let i = 0; i < this.getSkillName.length; i++) {
+          if (
+            this.min_max_limit[i][0] > limit[i] ||
+            limit[i] > this.min_max_limit[i][1]
+          ) {
+            return;
+          }
+        }
+        this.result_combi_list.push({ data: arr, limit: limit });
       } else {
         for (let key in tree) {
           for (let i = 0; i < this.getCoreList[key].skill_data.length; i++) {
             let target_skill = this.getCoreList[key].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
-            let target_min_max_idx = this.selected.indexOf(target_skill); //min_max의 몇번째 배열이 해당 스킬의 제한인가
-            let target = limit[target_min_max_idx];
-            if (target != undefined) {
-              target[1] -= 1;
-            }
+            limit[target_skill] += 1;
           }
 
-          //Vue는 배열값 변경에 제약이 있으므로 re-rendering
-          limit = JSON.parse(JSON.stringify(limit));
-
           let check = true;
-          for (let i = 0; i < this.getCoreList[key].skill_data.length; i++) {
-            let target_skill = this.getCoreList[key].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
-            let target_min_max_idx = this.selected.indexOf(target_skill); //min_max의 몇번째 배열이 해당 스킬의 제한인가
-            let target = limit[target_min_max_idx];
-            if (target != undefined && target[0] > target[1]) {
+          for (let i = 0; i < this.getSkillName.length; i++) {
+            //console.log(i,limit,this.min_max_limit);
+            if (limit[i] > this.min_max_limit[i][1]) {
+              //console.log("컷", limit);
               check = false;
               break;
             }
@@ -328,18 +430,14 @@ export default {
           }
           for (let i = 0; i < this.getCoreList[key].skill_data.length; i++) {
             let target_skill = this.getCoreList[key].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
-            let target_min_max_idx = this.selected.indexOf(target_skill); //min_max의 몇번째 배열이 해당 스킬의 제한인가
-            let target = limit[target_min_max_idx];
-            if (target != undefined) {
-              target[1] += 1;
-            }
+            limit[target_skill] -= 1;
           }
         }
       }
     },
     changeFilter(data) {
-      let tmp_change_min_max = this.selected.indexOf(data.target);
-      this.$set(this.min_max_limit, tmp_change_min_max, data.range);
+      this.min_max_limit[data.target] = data.range;
+      this.min_max_limit = JSON.parse(JSON.stringify(this.min_max_limit));
     },
     makeCombi(arr, selectNumber) {
       const results = [];
@@ -355,16 +453,22 @@ export default {
       return results;
     },
     makeCoreList(arr) {
+      // [1,2,3]스킬을 선택 -> [1번스킬의 코어들][2번스킬의 코어들][3번스킬의 코어들]들로 구성하는 조합
       let tmp_list = [];
       for (let i = 0; i < arr.length; i++) {
+        let check_core = this.target_core[arr[i]];
+        if (check_core.length == 0) {
+          check_core = this.map_core[arr[i]];
+        }
         if (tmp_list.length == 0) {
           //아무것도 없는 상태 아래 구현 모두 날라감
-          tmp_list = this.target_core[arr[i]].map((el) => [el]);
-        } else if (this.target_core[arr[i]].length != 0) {
+
+          tmp_list = check_core.map((el) => [el]);
+        } else if (check_core.length != 0) {
           let tmp = [];
           for (let j = 0; j < tmp_list.length; j++) {
-            for (let k = 0; k < this.target_core[arr[i]].length; k++) {
-              tmp.push([...tmp_list[j], this.target_core[arr[i]][k]]);
+            for (let k = 0; k < check_core.length; k++) {
+              tmp.push([...tmp_list[j], check_core[k]]);
             }
           }
           tmp_list = tmp;

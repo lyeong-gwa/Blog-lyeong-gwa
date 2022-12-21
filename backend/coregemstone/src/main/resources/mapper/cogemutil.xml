@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cogemutil.mapper.Cogemmapper">
+
+	<insert id="countImageUploadTry">
+		insert into imageuploadtry (id_date,id_hour,cnt)
+		values
+		(CURDATE(),HOUR(NOW()),1) on duplicate key update cnt= cnt+1;
+	</insert>
+
+	<insert id="countCoreCalcTry" >
+		insert into corecalctry (job,core_num,select_skill,combi_list_len)
+		values (#{job},#{core_num},#{select_skill},#{combi_list_len});
+	</insert>
+</mapper>

@@ -1,5 +1,9 @@
 package com.cogemutil.comtroller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.cogemutil.dto.Coregemstone;
 import com.cogemutil.dto.ResultGetCoreList;
@@ -34,36 +40,48 @@ public class Cogemcontroller {
 	CogemService service_cogem;
 
 	@PostMapping(value = "/get-core-list", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	public ResponseEntity<?> getCoreList(HttpSession session, @RequestParam("job") String job,@RequestParam("job_kr") String job_kr,
+	public ResponseEntity<?> getCoreList(@RequestParam("job") String job, @RequestParam("job_kr") String job_kr,
 			@RequestParam("upfile") MultipartFile[] files) {
 		try {
-			System.out.println("이미지처리 요청");
-			ResultGetCoreList result_get_core_list = service_cogem.getCogemList(files, session.getId(), job);
-			System.out.println("끝");
-			result_get_core_list.setJob(job);
-			result_get_core_list.setJob_kr(job_kr);
+			// System.out.println("이미지처리 요청");
+			ResultGetCoreList result_get_core_list = service_cogem.getCogemList(files, job, job_kr);
+			// System.out.println("끝");
 			return new ResponseEntity<Object>(result_get_core_list, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
 
-	@GetMapping(value="/skill/{job}/{skill_name}")
-	public ResponseEntity<?> showImage(@PathVariable("job") String job ,@PathVariable("skill_name") String skill_name) {
+	@GetMapping(value = "/skill/{job}/{skill_name}") // 특정 직업에 대한 스킬 이미지 요청
+	public ResponseEntity<?> showImage(@PathVariable("job") String job, @PathVariable("skill_name") String skill_name) {
 		try {
-			//System.out.println(job+","+skill_name);
-			Resource resource = service_cogem.getResourceImage(job,skill_name);
-			
+			Resource resource = service_cogem.getResourceImage(job, skill_name);
 			HttpHeaders header = new HttpHeaders();
 			header.add("Content-Type", "image/png");
-			
-			return new ResponseEntity<Object>(resource, header,HttpStatus.OK);
+
+			return new ResponseEntity<Object>(resource, header, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
-		
+
 	}
+
 	
+	@PostMapping(value = "/data_get")
+	public ResponseEntity<?> coreCalcTry(@RequestParam("job") String job, @RequestParam("core_num") int core_num,
+			@RequestParam("select_skill") String select_skill,@RequestParam("combi_list_len") int combi_list_len) {
+		try {
+			int result = service_cogem.coreCalcTry(job, core_num, select_skill, combi_list_len);
+			if (result == 0) {
+				System.out.println("적용x");
+			}
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+
+	}
+
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);

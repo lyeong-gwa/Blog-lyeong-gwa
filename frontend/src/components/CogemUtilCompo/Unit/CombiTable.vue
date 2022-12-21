@@ -16,12 +16,36 @@
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
 
-        <v-dialog v-model="dialog" max-width="1000px">
+        <v-dialog v-model="dialog_item" max-width="1000px">
           <v-card>
             <v-card-text>
               <v-container>
+                <div style="padding-bottom: 20px">
+                  선택해야 할 코어 :
+                  <a v-for="(val, idx) in selectItem.data" :key="idx">
+                    {{ val }},
+                  </a>
+                </div>
                 <v-row>
-                  {{selectItem}}
+                  <v-col v-for="(val, idx) in selectItem.limit" :key="idx" cols="3">
+                    <v-card class="mx-auto" outlined>
+                      <v-list-item three-line>
+                        <v-list-item-avatar tile height="50" width="32">
+                          <v-img
+                            :src="fix_imgPath(idx)"
+                            height="50"
+                            width="32"
+                          ></v-img>
+                        </v-list-item-avatar>
+                        <v-list-item-content right>
+                          <v-list-item-title style="font-size: 1.2em">
+                            중첩 수 : {{val}}<br>
+                            예상레벨: {{selectLevel[idx]}}
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-card>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -265,23 +289,23 @@ export default {
     combi_list: Array,
   },
   data: () => ({
-    dialog: false,
+    dialog_item: false,
     headers: [],
     core_list: [],
-    selectItem: {
-    },
+    selectItem: {},
+    selectLevel:{},
   }),
   computed: {
     ...cogemutilHelper.mapGetters(["getJob", "getSkillName", "getCoreList"]),
   },
   watch: {
-    dialog(val) {
+    dialog_item(val) {
       val || this.close();
     },
     combi_list: function (val) {
       this.core_list = [];
       let header_len = 8;
-      if(val.length!=0){
+      if (val.length != 0) {
         header_len = val[0].data.length + 1;
       }
       this.headers = [
@@ -295,7 +319,6 @@ export default {
         { text: "7번", value: "data[6]" },
       ].slice(0, header_len);
       this.core_list = val;
-      
     },
   },
 
@@ -316,14 +339,35 @@ export default {
         { text: "7번", value: "data[6]" },
       ].slice(0, 8);
     },
-
+    makeLimit(arr) {
+      let tmp = {};
+      for (let i = 0; i < this.getSkillName.length; i++) {
+        tmp[i] = 0;
+      }
+      for (let i = 0; i < arr.length; i++) {
+        tmp[this.getCoreList[arr[i]].skill_data[0]] += 1;
+        tmp[this.getCoreList[arr[i]].skill_data[1]] += 1;
+        tmp[this.getCoreList[arr[i]].skill_data[2]] += 1;
+      }
+      return tmp;
+    },
     LookItem(item) {
       this.selectItem = Object.assign({}, item);
-      this.dialog = true;
+      this.selectLevel = {};
+      for(let i in this.getSkillName){
+        this.selectLevel[i] = 0;
+      }
+      for(let i in item.data){
+        let target = this.getCoreList[item.data[i]];
+        for(let j in target.skill_data){
+          this.selectLevel[target.skill_data[j]] += target.level;
+        }
+      }
+      this.dialog_item = true;
     },
 
     close() {
-      this.dialog = false;
+      this.dialog_item = false;
     },
 
     imgPath(data) {
@@ -333,6 +377,11 @@ export default {
         this.getJob +
         "/" +
         this.getSkillName[target]
+      );
+    },
+    fix_imgPath(data) {
+      return (
+        `${domain}coregem/skill/` + this.getJob + "/" + this.getSkillName[data]
       );
     },
   },
