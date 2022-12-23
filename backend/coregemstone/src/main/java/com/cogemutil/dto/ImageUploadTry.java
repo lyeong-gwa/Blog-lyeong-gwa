@@ -1,11 +1,11 @@
 package com.cogemutil.dto;
 
-public class Imageuploadtry {
+public class ImageUploadTry {
 	String id_date;
 	String id_hour;
 	int cnt;
-	public Imageuploadtry() {}
-	public Imageuploadtry(String id_date, String id_hour, int cnt) {
+	public ImageUploadTry() {}
+	public ImageUploadTry(String id_date, String id_hour, int cnt) {
 		super();
 		this.id_date = id_date;
 		this.id_hour = id_hour;

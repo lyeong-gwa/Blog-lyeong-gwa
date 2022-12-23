@@ -1,14 +1,14 @@
 package com.cogemutil.dto;
 
-public class Corecalctry {
+public class CoreCalcTry {
 	int id;
 	String job;
 	int core_num;
 	String select_skill;
 	int combi_list_len;
-	public Corecalctry() {
+	public CoreCalcTry() {
 	}
-	public Corecalctry(int id, String job, int core_num, String select_skill, int combi_list_len) {
+	public CoreCalcTry(int id, String job, int core_num, String select_skill, int combi_list_len) {
 		super();
 		this.id = id;
 		this.job = job;

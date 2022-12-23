@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface Cogemmapper {
+public interface CogemMapper {
 	int countImageUploadTry();
 
 	int countCoreCalcTry(@Param("job") String job, @Param("core_num") int core_num,

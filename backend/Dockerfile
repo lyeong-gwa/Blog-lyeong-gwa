@@ -30,7 +30,8 @@ ENV JAVA_HOME=/usr/lib/jvm/zulu8-ca-amd64
 RUN apt-get -qq -y update && \
     apt-get -y install maven
 EXPOSE 8000
-CMD mvn package && java -jar /srv/docker-server/coregemstone/target/coregemstone-0.0.1-SNAPSHOT.jar
+# maven설치 및 빌드 -실행까지
+#CMD mvn package && java -jar /srv/docker-server/coregemstone/target/coregemstone-0.0.1-SNAPSHOT.jar
 
-# #RUN java -jar /srv/docker-server/coregemstone/target/coregemstone-0.0.1-SNAPSHOT.jar
-# #CMD ["java", "-jar", "coregemstone.jar"]
+# jar가 준비되어있고 바로 실행
+CMD java -jar /srv/docker-server/coregemstone/target/coregemstone-0.0.1-SNAPSHOT.jar

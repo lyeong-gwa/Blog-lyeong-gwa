@@ -5,12 +5,5 @@
       "src": "https://cdn.vuetifyjs.com/images/cards/house.jpg",
       "flex": 6,
       "link": "CogemUtil"
-    },
-    {
-      "title": "개발 중.....",
-      "explain": "추천받아요",
-      "src": "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-      "flex": 6,
-      "link": "#"
     }
   ]

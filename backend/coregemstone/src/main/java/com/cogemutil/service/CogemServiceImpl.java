@@ -9,10 +9,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cogemutil.dto.Corecalctry;
-import com.cogemutil.dto.Coregemstone;
+import com.cogemutil.dto.CoreCalcTry;
+import com.cogemutil.dto.Cogemstone;
 import com.cogemutil.dto.ResultGetCoreList;
-import com.cogemutil.mapper.Cogemmapper;
+import com.cogemutil.mapper.CogemMapper;
 import com.cogemutil.util.CogemUtil;
 
 @Service
@@ -22,7 +22,7 @@ public class CogemServiceImpl implements CogemService {
 	CogemUtil cogemutil;
 
 	@Autowired
-	Cogemmapper cogemmapper;
+	CogemMapper cogemmapper;
 
 	@Override //핵심 이미지 처리 및 필요데이터 전송
 	public ResultGetCoreList getCogemList(MultipartFile[] files, String job, String job_kr) throws IOException {

@@ -6,7 +6,7 @@ import java.util.List;
 public class ResultGetCoreList {
 	private String job;
 	private String job_kr;
-	private List<Coregemstone> core_list;
+	private List<Cogemstone> core_list;
 	private List<String> request_image_list;
 	private List<String> skill_name;
 	
@@ -17,7 +17,7 @@ public class ResultGetCoreList {
 		this.request_image_list = new ArrayList<>();
 		this.skill_name = new ArrayList<>();
 	}
-	public ResultGetCoreList(String job,String job_kr,List<Coregemstone> core_list, List<String> request_image_list,List<String> skill_name) {
+	public ResultGetCoreList(String job,String job_kr,List<Cogemstone> core_list, List<String> request_image_list,List<String> skill_name) {
 		super();
 		this.job = job;
 		this.job_kr = job_kr;
@@ -44,10 +44,10 @@ public class ResultGetCoreList {
 	public void setJob(String job) {
 		this.job = job;
 	}
-	public List<Coregemstone> getCore_list() {
+	public List<Cogemstone> getCore_list() {
 		return core_list;
 	}
-	public void setCore_list(List<Coregemstone> core_list) {
+	public void setCore_list(List<Cogemstone> core_list) {
 		this.core_list = core_list;
 	}
 	public List<String> getRequest_image_list() {

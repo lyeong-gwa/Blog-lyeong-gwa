@@ -1,4 +1,3 @@
 [
-    { "title": "코강유틸", "icon": "mdi-run" ,"link": "CogemUtil"},
-    { "title": "About Me", "icon": "mdi-help-box" ,"link": "About"}
+    { "title": "코강유틸", "icon": "mdi-run" ,"link": "CogemUtil"}
 ]

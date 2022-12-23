@@ -4,4 +4,9 @@ LABEL email = "wjdgmll77@naver.com"
 RUN mkdir /srv/docker-server
 WORKDIR /srv/docker-server
 EXPOSE 80
-CMD ["npm","run","serve"]
+
+# build안했을 때
+CMD npm install && npm run serve
+
+# dist준비되었을 때
+#CMD npm install -g serve && serve -s dist -l 80

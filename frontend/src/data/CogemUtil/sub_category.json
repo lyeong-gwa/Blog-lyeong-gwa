@@ -175,6 +175,10 @@
         {
             "label": "아크",
             "value": "Arc"
+        },
+        {
+            "label": "칼리",
+            "value": "Khali"
         }
     ],
     "anima": [

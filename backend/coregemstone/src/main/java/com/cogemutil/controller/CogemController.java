@@ -1,4 +1,4 @@
-package com.cogemutil.comtroller;
+package com.cogemutil.controller;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,18 +27,23 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.cogemutil.dto.Coregemstone;
+import com.cogemutil.dto.Cogemstone;
 import com.cogemutil.dto.ResultGetCoreList;
 import com.cogemutil.service.CogemService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/coregem")
-public class Cogemcontroller {
+@RequestMapping("/api/coregem")
+public class CogemController {
 
 	@Autowired
 	CogemService service_cogem;
-
+	
+	@GetMapping("/")
+	public ResponseEntity<?> getHeartBeat(){
+		return new ResponseEntity<String>("Alive", HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/get-core-list", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	public ResponseEntity<?> getCoreList(@RequestParam("job") String job, @RequestParam("job_kr") String job_kr,
 			@RequestParam("upfile") MultipartFile[] files) {

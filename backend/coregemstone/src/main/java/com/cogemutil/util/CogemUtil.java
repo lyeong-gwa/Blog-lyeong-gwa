@@ -20,7 +20,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
-import com.cogemutil.dto.Coregemstone;
+import com.cogemutil.dto.Cogemstone;
 import com.cogemutil.dto.ResultGetCoreList;
 
 public class CogemUtil {
@@ -29,7 +29,7 @@ public class CogemUtil {
 
 	public void getCogemList(MultipartFile[] files, String job, ResultGetCoreList result_get_core_list)
 			throws IOException {
-		List<Coregemstone> result = new ArrayList<>();
+		List<Cogemstone> result = new ArrayList<>();
 		int cnt = 0;
 		for (int i = 0; i < files.length; i++) {
 			BufferedImage image = ImageIO.read(files[i].getInputStream());
@@ -46,7 +46,7 @@ public class CogemUtil {
 	}
 
 	// 코어위치를 찾기위한 특정 이미지를 기준으로 좌표파악
-	public int searchPoint(BufferedImage user_img, String job, List<Coregemstone> result, int cnt,
+	public int searchPoint(BufferedImage user_img, String job, List<Cogemstone> result, int cnt,
 			ResultGetCoreList result_get_core_list) throws IOException {
 		BufferedImage zero_img = ImageIO.read(new File(UTILIMAGEPATH + "zero_target.png"));
 		Graphics2D g = user_img.createGraphics();
@@ -59,7 +59,7 @@ public class CogemUtil {
 			for (int c = 0; c < limit_width; c++) {
 				BufferedImage sub_image = user_img.getSubimage(c, r, zero_img.getWidth(), zero_img.getHeight());
 				if (matchImage(sub_image, zero_img) < 5) {
-					Coregemstone coregemstone = new Coregemstone(0, 0, new int[3]);
+					Cogemstone coregemstone = new Cogemstone(0, 0, new int[3]);
 					coregemstone.setCore_id(cnt);
 					coregemstone.setImg(user_img.getSubimage(c - 6, r - 3, 32, 44));
 					g.drawString(Integer.toString(cnt), c + 28, r + 30);
@@ -89,7 +89,7 @@ public class CogemUtil {
 		Arrays.sort(top_file, new FileComparator());
 		Arrays.sort(right_file, new FileComparator());
 		Arrays.sort(level_file, new FileComparator());
-		List<Coregemstone> list = result_get_core_list.getCore_list();
+		List<Cogemstone> list = result_get_core_list.getCore_list();
 		for (int i = 0; i < list.size(); i++) {
 			int[] tmp_list = { -1, -1, -1 };
 			double[] tmp_min_check = { 100, 100, 100 };
@@ -166,7 +166,7 @@ public class CogemUtil {
 
 	// 서버가 가지고 있지 않는 코어이미지라면 저장
 	public void makeSkillMixImage(String job, ResultGetCoreList result_get_core_list) {
-		for (Coregemstone core : result_get_core_list.getCore_list()) {
+		for (Cogemstone core : result_get_core_list.getCore_list()) {
 			int[] target_list = core.getSkill_data();
 			File target_file = new File(UTILIMAGEPATH + "skill_mix/" + job + "/" + target_list[0] + "," + target_list[1]
 					+ "," + target_list[2] + ".png");

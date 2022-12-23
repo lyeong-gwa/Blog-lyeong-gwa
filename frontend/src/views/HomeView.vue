@@ -3,7 +3,7 @@
     <v-row dense>
       <v-col v-for="card in cards" :key="card.title" :cols="card.flex">
         <v-card>
-          <a :href="card.link">
+          <router-link :to="card.link">
             <v-img
               :src="card.src"
               class="white--text align-end"
@@ -11,7 +11,7 @@
               height="300px"
             >
             </v-img>
-          </a>
+          </router-link>
           <v-card-actions>
             <v-card-title v-text="card.title"></v-card-title>
             <v-spacer></v-spacer>
