@@ -48,9 +48,9 @@ public class CogemController {
 	public ResponseEntity<?> getCoreList(@RequestParam("job") String job, @RequestParam("job_kr") String job_kr,
 			@RequestParam("upfile") MultipartFile[] files) {
 		try {
-			// System.out.println("이미지처리 요청");
+			System.out.println("이미지처리 요청");
 			ResultGetCoreList result_get_core_list = service_cogem.getCogemList(files, job, job_kr);
-			// System.out.println("끝");
+			System.out.println("끝");
 			return new ResponseEntity<Object>(result_get_core_list, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);

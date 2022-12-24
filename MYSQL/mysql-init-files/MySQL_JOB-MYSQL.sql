@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `imageuploadtry` (
 
 CREATE TABLE IF NOT EXISTS `corecalctry` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `job` VARCHAR(10) NULL,
+  `job` VARCHAR(20) NULL,
   `core_num` INT NULL,
   `select_skill` VARCHAR(50) NULL,
   `combi_list_len` INT NULL,
