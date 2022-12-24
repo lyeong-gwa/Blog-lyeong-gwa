@@ -6,12 +6,17 @@ RUN mkdir /srv/docker-server
 RUN mkdir /utilImage
 WORKDIR /srv/docker-server/coregemstone
 
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+RUN apt-get install locales
+RUN localedef -f UTF-8 -i ko_KR ko_KR.utf8
+ENV LANG='ko_KR.utf8' LC_ALL=ko_KR.utf8
 
-RUN apt-get -qq update && \
-    apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl tzdata && \
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
-    locale-gen en_US.UTF-8
+
+#ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+#RUN apt-get -qq update && \
+#    apt-get -qq -y --no-install-recommends install gnupg software-properties-common locales curl tzdata && \
+#    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
+#    locale-gen en_US.UTF-8
 
 
 
