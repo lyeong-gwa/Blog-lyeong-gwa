@@ -358,9 +358,9 @@ export default {
         this.selectLevel[i] = 0;
       }
       for(let i in item.data){
-        let target = this.getCoreLevel[item.data[i]];
+        let target = this.getCoreList[item.data[i]];
         for(let j in target.skill_data){
-          this.selectLevel[target.skill_data[j]] += target.level;
+          this.selectLevel[target.skill_data[j]] += this.getCoreLevel[target.skill_data[0]];
         }
       }
       this.dialog_item = true;
