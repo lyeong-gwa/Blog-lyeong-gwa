@@ -10,6 +10,7 @@
       <v-tab>데이터 입력</v-tab>
       <v-tab>입력값 분석결과</v-tab>
       <v-tab>조합 찾기</v-tab>
+      <a href="https://lyeong-gwa.tistory.com/231" target='_blank' style="position:absolute; right:0;">사용법 설명링크</a>
     </v-tabs>
     <InputCompo v-show="tab == 0" />
     <result-compo v-show="tab==1"></result-compo>
