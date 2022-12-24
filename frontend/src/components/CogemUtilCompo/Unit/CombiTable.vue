@@ -296,7 +296,7 @@ export default {
     selectLevel:{},
   }),
   computed: {
-    ...cogemutilHelper.mapGetters(["getJob", "getSkillName", "getCoreList"]),
+    ...cogemutilHelper.mapGetters(["getJob", "getSkillName", "getCoreList","getCoreLevel"]),
   },
   watch: {
     dialog_item(val) {
@@ -358,7 +358,7 @@ export default {
         this.selectLevel[i] = 0;
       }
       for(let i in item.data){
-        let target = this.getCoreList[item.data[i]];
+        let target = this.getCoreLevel[item.data[i]];
         for(let j in target.skill_data){
           this.selectLevel[target.skill_data[j]] += target.level;
         }

@@ -11,7 +11,7 @@
       </v-list-item-avatar>
 
       <v-list-item-content right>
-        <v-list-item-title style="font-size: 1.2em">
+        <v-list-item-title style="font-size: 0.9em">
           <v-row>
             <v-col cols="6" style="margin-top: 15px">
               {{ info }}

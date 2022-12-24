@@ -99,7 +99,7 @@
                 </td>
 
                 <td style="font-size: 0.7em">{{ removeExtension(skill) }}</td>
-                <td>{{ getCoreLeve[i] }}</td>
+                <td>{{ getCoreLevel[i] }}</td>
                 <td>
                   <v-checkbox v-model="skill_selected" :value="i"></v-checkbox>
                 </td>
@@ -125,7 +125,7 @@ export default {
       "getJob",
       "getJobKr",
       "getSkillName",
-      "getCoreLeve",
+      "getCoreLevel",
     ]),
     
   },

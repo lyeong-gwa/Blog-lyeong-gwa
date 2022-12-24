@@ -30,7 +30,7 @@ const getters = {
   getSkillName(){
     return state.skill_name;
   },
-  getCoreLeve(){
+  getCoreLevel(){
     return state.core_level;
   }
 }
