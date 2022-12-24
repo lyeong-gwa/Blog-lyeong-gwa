@@ -4,8 +4,8 @@ services:
 
   #로드밸런싱용으로 적용 -> docker-compose scale도 있지만 spring port 문제
   nginx:
-    platform: linux/amd64
     image: nginx:1.21.5-alpine
+    #platform: linux/amd64
     ports:
       - 8000:8000
     volumes:
@@ -23,7 +23,6 @@ services:
       - blog
 
   db:
-    platform: linux/amd64
     build: ./MYSQL
     #restart: always
     container_name: db_mysql
@@ -44,7 +43,6 @@ services:
       - blog
 
   frontend:
-    platform: linux/amd64
     build: ./frontend
     volumes:
       - ./frontend:/srv/docker-server
@@ -61,7 +59,6 @@ services:
   # 도커 동작 순서 이해할 필요가 있어보임
   # build할 때 Dockerfile을 처리하는데 volumes은 아래에 위치 mvn package로 스프링 프로젝트 접근x
   backend1:
-    platform: linux/amd64
     build: ./backend
     container_name: backend_spring1
     #restart: always
@@ -79,7 +76,6 @@ services:
       - blog 
   
   backend2:
-    platform: linux/amd64
     build: ./backend
     container_name: backend_spring2
     #restart: always
@@ -97,7 +93,6 @@ services:
       - blog 
   
   backend3:
-    platform: linux/amd64
     build: ./backend
     container_name: backend_spring3
     #restart: always
