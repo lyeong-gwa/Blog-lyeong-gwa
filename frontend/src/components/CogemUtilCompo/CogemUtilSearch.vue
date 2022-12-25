@@ -113,6 +113,7 @@
             class="primary"
             style="position: relative; top: 50%"
             @click="calcCombi"
+            :disabled="wait_toggle"
             >조합검색 시작</v-btn
           >
         </v-col>
@@ -201,6 +202,7 @@ export default {
   },
   data() {
     return {
+      wait_toggle: false,
       selected: [], // 선택한 핵심코어 담은 리스트
       min_max_limit: [],
       core_use_count: 2, // 사용할 코어 개수값
@@ -271,7 +273,7 @@ export default {
     },
 
     calcCombi() {
-
+      this.wait_toggle = true;
       let sub_list = []; //target_core는 2중첩 코어 가지고있는 라벨들만, sub_list는 선택한 스킬 이외의 코어들에서 2중첩인 경우
 
       if (this.selected.length < this.core_use_count) {
@@ -379,8 +381,7 @@ export default {
       formdata.append("core_num", this.core_use_count);
       formdata.append("select_skill", JSON.stringify(this.selected));
       formdata.append("combi_list_len", this.result_combi_list.length);
-      
-      this.result_combi_list
+      this.wait_toggle = false;
       http({
         method: "post",
         url: "/coregem/data_get",
