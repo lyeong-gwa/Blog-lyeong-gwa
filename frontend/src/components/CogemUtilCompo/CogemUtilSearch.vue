@@ -394,7 +394,7 @@ export default {
         });
     },
     searchTree(tree, limit, arr) {
-      if (this.result_combi_list.length > 100000) {
+      if (this.result_combi_list.length > 10000) {
         return;
       }
       if (Object.keys(tree).length == 0) {
