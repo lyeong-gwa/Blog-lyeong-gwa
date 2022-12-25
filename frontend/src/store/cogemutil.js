@@ -53,8 +53,11 @@ const actions = {
         commit('USERCOREINFO',response.data);
       })
       .catch(function (error) {
-        alert(`error:문제가 발생하였습니다. 잠시 후 다시 이용해주세요.
-        ${error}`);
+        alert(`error:문제가 발생하였습니다.다음을 확인해주세요.
+        1. 인게임 캡처(권장)
+        2. V매트릭스 이동X(중앙에 위치고정)
+        3. 되도록 15장 이내를 업로드해주세요.
+        에러코드 상황: ${error}`);
         state.upload_wait=false;
       });
   }
