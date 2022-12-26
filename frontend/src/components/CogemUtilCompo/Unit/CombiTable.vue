@@ -270,6 +270,36 @@
       </table>
     </template>
 
+    <template v-slot:[`item.data[7]`]="{ item }">
+      No.{{ item.data[7] }}
+      <table>
+        <tr>
+          <th>
+            <v-img
+              :src="imgPath({ num: item.data[7], idx: 0 })"
+              height="36"
+              width="29"
+            />
+          </th>
+
+          <th>
+            <v-img
+              :src="imgPath({ num: item.data[7], idx: 1 })"
+              height="36"
+              width="29"
+            />
+          </th>
+
+          <th>
+            <v-img
+              :src="imgPath({ num: item.data[7], idx: 2 })"
+              height="36"
+              width="29"
+            />
+          </th>
+        </tr>
+      </table>
+    </template>
     <!-- 정보확인 -->
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon small class="mr-2" @click="LookItem(item)"> mdi-pencil </v-icon>
@@ -304,7 +334,7 @@ export default {
     },
     combi_list: function (val) {
       this.core_list = [];
-      let header_len = 8;
+      let header_len = 9;
       if (val.length != 0) {
         header_len = val[0].data.length + 1;
       }
@@ -317,6 +347,7 @@ export default {
         { text: "5번", value: "data[4]" },
         { text: "6번", value: "data[5]" },
         { text: "7번", value: "data[6]" },
+        { text: "8번", value: "data[7]" },
       ].slice(0, header_len);
       this.core_list = val;
     },
@@ -337,7 +368,8 @@ export default {
         { text: "5번", value: "data[4]" },
         { text: "6번", value: "data[5]" },
         { text: "7번", value: "data[6]" },
-      ].slice(0, 8);
+        { text: "8번", value: "data[7]" },
+      ].slice(0, 9);
     },
     makeLimit(arr) {
       let tmp = {};

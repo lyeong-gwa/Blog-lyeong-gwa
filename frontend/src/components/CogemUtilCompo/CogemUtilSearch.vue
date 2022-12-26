@@ -206,7 +206,7 @@ export default {
       selected: [], // 선택한 핵심코어 담은 리스트
       min_max_limit: [],
       core_use_count: 2, // 사용할 코어 개수값
-      select_core_use: [2, 3, 4, 5, 6, 7], // 사용할 코어개수 박스옵션
+      select_core_use: [2, 3, 4, 5, 6, 7, 8], // 사용할 코어개수 박스옵션
       select_subcore_use: [
         // 단기적으로 볼 것인가 장기적으로 볼 것인가
         { label: "잡코어는 사용하지 않고 선택한 코어만 강화", value: false },
