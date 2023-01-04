@@ -327,9 +327,13 @@ export default {
           this.core_use_count - filter_select_2core.length
         );
       }
+      let real_core_use_count = Math.min(
+        filter_select_2core.length,
+        this.core_use_count
+      );
       let make_combi_list = this.makeCombi(
         filter_select_2core,
-        Math.min(filter_select_2core.length, this.core_use_count)
+        real_core_use_count
       );
 
       //final_2core의 길이가 0이 아니라면 make_combi_list는 1개의 array로만 구성
@@ -350,13 +354,17 @@ export default {
       // console.log(make_combi_list,final_2core_list);
       // console.log("실질적으로 사용할 2중첩 이상 선택코어", filter_select_2core);
       // console.log("코어 선택 경우의 수", make_combi_list.length);
-      let tree = {};
 
       //tree만들기 : [1,2,3] -> { 1:{2:3:{}}} 형태로
       //[1,2,3] [1,2,4] 두개가 있을 때 { 1 : { 2: { 3 : {}, 4 : {} } } } DFS처리하기 용이함
+      this.result_combi_list = [];
+      console.log(make_combi_list);
       for (let i = 0; i < make_combi_list.length; i++) {
+        let tree = {};
+        console.log("시작합니다");
+        console.log(make_combi_list[i]);
         let last_list = this.makeCoreList(make_combi_list[i]);
-
+        console.log(last_list.length);
         for (let j = 0; j < last_list.length; j++) {
           let node = tree;
           for (let k = 0; k < last_list[j].length; k++) {
@@ -366,16 +374,13 @@ export default {
             node = node[last_list[j][k]];
           }
         }
+        this.searchTree(tree, real_core_use_count);
+        if (this.result_combi_list.length > 10000) {
+          break;
+        }
       }
-      //console.log(tree);
-      this.result_combi_list = [];
-      let count_state = {};
-      for (let i = 0; i < this.getSkillName.length; i++) {
-        count_state[i] = 0;
-      }
-      this.searchTree(tree, count_state, []); //깊은 복사 필요
       //console.log(this.result_combi_list.length);
-      
+
       let formdata = new FormData();
       formdata.append("job", this.getJob);
       formdata.append("core_num", this.core_use_count);
@@ -393,45 +398,74 @@ export default {
         ${error}`);
         });
     },
-    searchTree(tree, limit, arr) {
-      if (this.result_combi_list.length > 10000) {
-        return;
+    searchTree(tree, core_use_count) {
+      let limit = {};
+      for (let i = 0; i < this.getSkillName.length; i++) {
+        limit[i] = 0;
       }
-      if (Object.keys(tree).length == 0) {
-        for (let i = 0; i < this.getSkillName.length; i++) {
-          if (
-            this.min_max_limit[i][0] > limit[i] ||
-            limit[i] > this.min_max_limit[i][1]
-          ) {
-            return;
-          }
-        }
-        this.result_combi_list.push({ data: arr, limit: limit });
-      } else {
-        for (let key in tree) {
-          for (let i = 0; i < this.getCoreList[key].skill_data.length; i++) {
-            let target_skill = this.getCoreList[key].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
+
+      let arr = [];
+      let node_list = [];
+      let state_list = [];
+      node_list.push(tree);
+      state_list.push(Object.keys(tree));
+      while (state_list.length != 0) {
+        if (state_list[state_list.length - 1].length != 0) {
+          //다음가지로 뻗어나가야 할 때
+          let insert_core_idx = state_list[state_list.length - 1].pop();
+          arr.push(insert_core_idx);
+          let target_core = this.getCoreList[insert_core_idx];
+          //추가한 코어에 대한 중첩계산
+          for (let i = 0; i < target_core.skill_data.length; i++) {
+            let target_skill = this.getCoreList[insert_core_idx].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
             limit[target_skill] += 1;
           }
 
-          let check = true;
+          let check_able = true;
+          //중첩제한 유효성 검사
           for (let i = 0; i < this.getSkillName.length; i++) {
-            //console.log(i,limit,this.min_max_limit);
-            if (limit[i] > this.min_max_limit[i][1]) {
-              //console.log("컷", limit);
-              check = false;
+            if (
+              this.min_max_limit[i][0] >
+                limit[i] + (core_use_count - arr.length) ||
+              limit[i] > this.min_max_limit[i][1]
+            ) {
+              check_able = false;
               break;
             }
           }
-          if (check) {
-            this.searchTree(tree[key], JSON.parse(JSON.stringify(limit)), [
-              ...arr,
-              key,
-            ]);
+          if (check_able) {
+            node_list.push(node_list[node_list.length - 1][insert_core_idx]);
+            state_list.push(Object.keys(node_list[node_list.length - 1]));
+          } else {
+            arr.pop();
+            for (let i = 0; i < target_core.skill_data.length; i++) {
+              let target_skill =
+                this.getCoreList[insert_core_idx].skill_data[i];
+              limit[target_skill] -= 1;
+            }
           }
-          for (let i = 0; i < this.getCoreList[key].skill_data.length; i++) {
-            let target_skill = this.getCoreList[key].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
-            limit[target_skill] -= 1;
+        } else {
+          //이전 가지로 돌아가야 할 경우 (leaf 혹은 가지 전체 확인완료)
+          if (arr.length == core_use_count) {
+            //leaf일 때
+            this.result_combi_list.push({
+              data: JSON.parse(JSON.stringify(arr)),
+              limit: JSON.parse(JSON.stringify(limit)),
+            });
+            if (this.result_combi_list.length > 10000) {
+              break;
+            }
+          }
+          state_list.pop();
+          node_list.pop();
+          let remove_limit_cnt = arr.pop();
+          if (remove_limit_cnt != undefined) {
+            let target_core = this.getCoreList[remove_limit_cnt];
+            for (let i = 0; i < target_core.skill_data.length; i++) {
+              let target_skill =
+                this.getCoreList[remove_limit_cnt].skill_data[i]; //key로 지정된 코어의 데이터 메인->중간->오른쪽 순으로
+              limit[target_skill] -= 1;
+            }
           }
         }
       }
@@ -480,4 +514,3 @@ export default {
   },
 };
 </script>
-
