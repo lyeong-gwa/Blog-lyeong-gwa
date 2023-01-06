@@ -14,7 +14,7 @@
         <v-list-item-title style="font-size: 0.9em">
           <v-row>
             <v-col cols="6" style="margin-top: 15px">
-              {{ info }}
+              {{ subInfo }}...
             </v-col>
             <v-col cols="6">
               <v-range-slider
@@ -49,8 +49,6 @@ export default {
     all_range: Array,
     this_selected: Boolean,
   },
-  computed: {
-  },
   data() {
     return {
       range: [0, 7],
@@ -70,6 +68,11 @@ export default {
       
     },
   },
+  computed:{
+    subInfo: function(){
+      return this.info.substring(0,Math.min(15,this.info.length));
+    }
+  }
 };
 </script>
 
