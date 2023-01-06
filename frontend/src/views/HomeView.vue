@@ -1,5 +1,5 @@
 <template>
-  <v-container >
+  <v-container>
     <v-row dense>
       <v-col v-for="card in cards" :key="card.title" :cols="card.flex">
         <v-card>
@@ -29,7 +29,15 @@
 <script>
 export default {
   data: () => ({
-    cards: require("@/data/core/Home.json"),
+    cards: [
+      {
+        title: "코강유틸",
+        explain: "코어강화 도우미 서비스",
+        src: require("@/assets/image/coregemstone.png"),
+        flex: 6,
+        link: "CogemUtil",
+      },
+    ],
   }),
 };
 </script>
