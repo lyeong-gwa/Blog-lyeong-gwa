@@ -16,9 +16,9 @@
             not associated with NEXON Korea.</strong
           >
           
-          <v-btn v-for="item in icons" :key="item" class="mx-4" dark icon :href="item.link">
+          <v-btn class="mx-4" dark icon href="https://github.com/lyeong-gwa">
             <v-icon size="24px">
-              {{ item.icon }}
+              mdi-github
             </v-icon>
           </v-btn>
         </v-card-text>
@@ -38,8 +38,5 @@ export default {
     AppBar,
     Drawer,
   },
-  data: () => ({
-    icons: [{icon:"mdi-github",link:"https://github.com/lyeong-gwa"}],
-  }),
 };
 </script>
