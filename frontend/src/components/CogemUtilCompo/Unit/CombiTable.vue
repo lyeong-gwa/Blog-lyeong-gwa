@@ -5,7 +5,7 @@
     sort-by="calories"
     class="elevation-1"
     :footer-props="{
-      'items-per-page-text': '(최대 검색 조합 수:10001개)페이지 당 보여줄 조합',
+      'items-per-page-text': '(약 100개 까지만 검색) 페이지 당 보여줄 조합',
       'items-per-page-options': [5, 10, 15, 20],
       pageText: '총 {2}개 항목 중 {0}-{1}',
     }"

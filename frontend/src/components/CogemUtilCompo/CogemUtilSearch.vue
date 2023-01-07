@@ -272,7 +272,7 @@ export default {
       return name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/, "");
     },
 
-    calcCombi() {
+    async calcCombi() {
       this.wait_toggle = true;
       let sub_list = []; //target_core는 2중첩 코어 가지고있는 라벨들만, sub_list는 선택한 스킬 이외의 코어들에서 2중첩인 경우
 
@@ -335,7 +335,7 @@ export default {
         filter_select_2core,
         real_core_use_count
       );
-      
+
       //final_2core의 길이가 0이 아니라면 make_combi_list는 1개의 array로만 구성
       //console.log(make_combi_list, this.sub_core_use.value);
       if (final_2core_list.length != 0 && this.sub_core_use.value) {
@@ -358,17 +358,31 @@ export default {
         able_min += this.min_max_limit[i][0];
         able_max += this.min_max_limit[i][1];
       }
-      if(!(able_min<=real_core_use_count*3&&real_core_use_count*3<=able_max)){
-        alert("가능하지 않은 필터 중첩범위입니다.\n최소중첩들 합 <= 조합에 쓰는 코어 수 * 3 <= 최대중첩들 합\n사용하고자 하는 코어 수: "+real_core_use_count+"\n사용하고자 하는 코어 수는 소지한 코어가 부족하면 기입한 것에 비해 줄어들 수 있습니다.");
+      if (
+        !(
+          able_min <= real_core_use_count * 3 &&
+          real_core_use_count * 3 <= able_max
+        )
+      ) {
+        alert(
+          "가능하지 않은 필터 중첩범위입니다.\n최소중첩들 합 <= 조합에 쓰는 코어 수 * 3 <= 최대중첩들 합\n사용하고자 하는 코어 수: " +
+            real_core_use_count +
+            "\n사용하고자 하는 코어 수는 소지한 코어가 부족하면 기입한 것에 비해 줄어들 수 있습니다."
+        );
+        return;
       }
-
+      const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
       //tree만들기 : [1,2,3] -> { 1:{2:3:{}}} 형태로
       //[1,2,3] [1,2,4] 두개가 있을 때 { 1 : { 2: { 3 : {}, 4 : {} } } } DFS처리하기 용이함
       this.result_combi_list = [];
+
+      console.log(`조합 수:${make_combi_list.length}`);
       for (let i = 0; i < make_combi_list.length; i++) {
         let tree = this.makeCoreList(make_combi_list[i]);
+        await wait(10);
+        console.log(`${i+1}번째 조합 연산시작`);
         this.searchTree(tree, make_combi_list[i]);
-        if (this.result_combi_list.length > 10000) {
+        if (this.result_combi_list.length > 100) {
           break;
         }
       }
@@ -390,7 +404,8 @@ export default {
         ${error}`);
         });
     },
-    searchTree(tree, combi_list) {
+    async searchTree(tree, combi_list) {
+      const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
       let limit = {};
       for (let i = 0; i < this.getSkillName.length; i++) {
         limit[i] = 0;
@@ -403,6 +418,9 @@ export default {
       let state_list = [];
       state_list.push(JSON.parse(JSON.stringify(tree[0])));
       while (state_list.length != 0) {
+        if(arr.length==2){
+          await wait(0);
+        }
         if (
           state_list[state_list.length - 1].length == 0 ||
           arr.length == tree.length
@@ -414,7 +432,7 @@ export default {
               data: JSON.parse(JSON.stringify(arr)),
               limit: JSON.parse(JSON.stringify(limit)),
             });
-            if (this.result_combi_list.length > 10000) {
+            if (this.result_combi_list.length > 100) {
               break;
             }
           } else {
