@@ -403,6 +403,7 @@ export default {
           alert(`error:문제가 발생하였습니다. 잠시 후 다시 이용해주세요.
         ${error}`);
         });
+      alert("계산이 완료되었습니다.");
     },
     async searchTree(tree, combi_list) {
       const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay));
