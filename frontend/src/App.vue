@@ -3,7 +3,7 @@
     <Drawer></Drawer>
     <AppBar></AppBar>
     <v-main>
-      <v-card class="mx-auto" max-width="1300" style="margin-top: 30px">
+      <v-card class="mx-auto" max-width="1100" style="margin-top: 30px">
         <router-view />
       </v-card>
     </v-main>
@@ -15,7 +15,7 @@
             © www.coregemstone.com All Rights Reserved. www.coregemstone.com is
             not associated with NEXON Korea.</strong
           >
-          <v-spacer></v-spacer>
+          
           <v-btn v-for="item in icons" :key="item" class="mx-4" dark icon :href="item.link">
             <v-icon size="24px">
               {{ item.icon }}
