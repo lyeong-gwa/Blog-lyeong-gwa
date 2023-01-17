@@ -166,8 +166,10 @@ export default {
     for (let i = 0; i < this.getCoreList.length; i++) {
       let target_core = this.getCoreList[i].skill_data;
       let target_list = this.map_core[this.getCoreList[i].skill_data[0]];
-
       let duplicate = false;
+      if(target_list === undefined){ //메인코어값이 -1 혹은 수정에 의해 이상한 값 -> 코어가 망가진다. -> 무시하기
+        continue;
+      }
       for (let j = 0; j < target_list.length; j++) {
         let unit_core = this.getCoreList[target_list[j]].skill_data; //미리들어간 코어
         let cnt = 0;
@@ -190,7 +192,7 @@ export default {
       this.min_max_limit[i] = [0, 2];
     }
     //console.log(this.getCoreList);
-    //console.log(this.map_core);
+    console.log(this.map_core);
   },
   computed: {
     ...cogemutilHelper.mapGetters([

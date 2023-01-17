@@ -60,6 +60,10 @@ const actions = {
         에러코드 상황: ${error}`);
         state.upload_wait=false;
       });
+  },
+
+  changeCoreInfo({commit},payload){
+    commit('CHANGECOREINFO',payload);
   }
 }
 
@@ -71,6 +75,13 @@ const mutations = {
     state.upload_wait=false;
   },
 
+  CHANGECOREINFO(state,payload){
+    for(let i = 0 ; i < 3;i++){
+      state.core_list[payload.id].skill_data[i] = parseInt(payload.info[i]);
+    }
+    //Vue는 JS 한계로 배열값 변경에 의해서 리렌더링을 할 수 없다. 배열 주소값을 변경시켜야 리렌더링을 수행하게 된다.
+    state.core_list[payload.id].skill_data = JSON.parse(JSON.stringify(state.core_list[payload.id].skill_data));
+  },
 
   USERCOREINFO(state,payload) {
     state.core_list = payload.core_list;

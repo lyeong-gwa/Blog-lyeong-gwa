@@ -16,7 +16,7 @@
     <v-row>
       <v-col cols="6">
         <div class="text-center">
-          <h1>보유한 코어정보</h1>
+          <h1>보유한 코어정보(클릭시 수정가능)</h1>
         </div>
         <v-simple-table fixed-header height="1100px">
           <template v-slot:default>
@@ -30,8 +30,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="core in getCoreList" :key="core.core_id">
-                <td>{{ core.core_id }}</td>
+              <tr v-for="core in getCoreList" :key="core.core_id" @click="selectCoreInfo(core.core_id)">
+                <td>
+                  {{ core.core_id }}
+                </td>
                 <td>
                   <v-img
                     :src="imgPath(core.skill_data[0])"
@@ -109,6 +111,69 @@
         </v-simple-table>
       </v-col>
     </v-row>
+    <v-dialog v-model="change_dialog" max-width="290">
+      <v-card>
+        <v-card-title class="text-h5">
+          No.{{ select_core }}코어 정보 수정
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="3">
+              <v-img
+                :src="imgPath(select_core_info[0])"
+                height="60"
+                width="48"
+              ></v-img>
+            </v-col>
+            <v-col cols="9">
+              <v-text-field
+                label="메인코어"
+                v-model="select_core_info[0]"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-img
+                :src="imgPath(select_core_info[1])"
+                height="60"
+                width="48"
+              ></v-img>
+            </v-col>
+            <v-col cols="9">
+              <v-text-field
+                label="서브코어:중간"
+                v-model="select_core_info[1]"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="3">
+              <v-img
+                :src="imgPath(select_core_info[2])"
+                height="60"
+                width="48"
+              ></v-img>
+            </v-col>
+            <v-col cols="9">
+              <v-text-field
+                label="서브코어:오른쪽"
+                v-model="select_core_info[2]"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="tryChangeCoreInfo">
+            변경하기
+          </v-btn>
+          <v-btn color="green darken-1" text @click="change_dialog = false">
+            돌아가기
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -127,28 +192,39 @@ export default {
       "getSkillName",
       "getCoreLevel",
     ]),
-    
   },
   data() {
     return {
       skill_selected: [],
+      change_dialog: false,
+      select_core: 0,
+      select_core_info: [0, 0, 0],
     };
   },
   methods: {
     imgPath(num) {
       return (
-        `${domain}coregem/skill/` +
-        this.getJob +
-        "/" +
-        this.getSkillName[num]
+        `${domain}coregem/skill/` + this.getJob + "/" + this.getSkillName[num]
       );
     },
     skill_info(arr) {
       return this.skill_selected.filter((x) => arr.includes(x)).length;
     },
-    removeExtension(name){
-      return name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/,'');
+    removeExtension(name) {
+      return name.trim().replace(/(.png|.jpg|.jpeg|.gif)$/, "");
     },
+    selectCoreInfo(select_id) {
+      this.select_core = select_id;
+      this.select_core_info = JSON.parse(
+        JSON.stringify(this.getCoreList[select_id].skill_data)
+      );
+      this.change_dialog = true;
+    },
+    tryChangeCoreInfo() {
+      let payload = { id: this.select_core, info: this.select_core_info };
+      this.changeCoreInfo(payload);
+    },
+    ...cogemutilHelper.mapActions(["changeCoreInfo"]),
   },
 };
 </script>
